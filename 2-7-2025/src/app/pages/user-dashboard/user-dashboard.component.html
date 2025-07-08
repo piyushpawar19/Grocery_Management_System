@@ -1,0 +1,67 @@
+<!-- 
+<nav class="navbar">
+  <div class="logo"><a href="home.component.html" style="text-decoration:none;color: #fff;"> Grocery<span>Mgmt</span></a></div>
+
+  <input type="text" placeholder="Search groceries..." />
+  <div class="links">
+    <a routerLink="/add-to-cart">Cart</a>
+    <a routerLink="/user-dashboard/profile">Profile</a>
+    <a routerLink="/">Logout</a>
+  </div>
+</nav> -->
+
+<nav class="navbar">
+  <div class="logo">
+    <a
+      href="home.component.html"
+      style="text-decoration: none; color: #fff; margin-right: -60px"
+    >
+      Grocery<span>Mart</span></a
+    >
+  </div>
+  <!-- <input type="text" placeholder="Search groceries..." /> -->
+
+  <div class="search-container">
+    <input type="text" placeholder="Search groceries..." />
+    <button type="submit">
+      <i class="fa fa-search" style="color: white"></i>
+    </button>
+  </div>
+
+  <!-- <div class="links">
+    <a routerLink="/register">Register</a>
+    <a routerLink="/login-selection">Login</a>
+  </div> -->
+  <div class="links">
+    <a routerLink="/add-to-cart">Cart</a>
+    <a routerLink="/user-dashboard/profile">Profile</a>
+    <a routerLink="/">Logout</a>
+  </div>
+</nav>
+<section class="hero">
+  <h1>Welcome to GroceryMart</h1>
+  <p>Your Grocery Store's New Best Friend.</p>
+  <a href="/register" class="cta-button">Get Started</a>
+</section>
+<!-- <div class="grid-container">
+  <div class="product-card" *ngFor="let p of products" (click)="viewProduct(p.id)">
+    <img [src]="p.image" [alt]="p.title">
+    <h3>{{ p.title }}</h3>
+    <p>$ {{ p.price.toFixed(2) }}</p>
+  </div>
+</div> -->
+
+<section class="products">
+  <h2>Products</h2>
+  <div class="grid">
+    <div class="card" *ngFor="let p of products">
+      <img src="../../../assets/images/apple.jpg" alt="{{ p.productName }}" />
+      <h3>{{ p.productName }}</h3>
+      <p>{{ p.productDescription }}</p>
+      <span class="price">₹{{ p.price }}</span>
+      <button type="button" aria-label="Add Product to Cart">
+        Add to Cart
+      </button>
+    </div>
+  </div>
+</section>

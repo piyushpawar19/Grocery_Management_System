@@ -1,0 +1,41 @@
+<nav class="navbar">
+  
+  <div class="logo"><a href="home.component.html" style="text-decoration:none;color: #fff;"> Grocery<span>Mart</span></a>
+  </div>
+  <!-- <input type="text" placeholder="Search groceries..." /> -->
+  
+  <div class="search-container">
+      <input type="text" placeholder="Search groceries..." />
+      <button type="submit">
+        <i class="fa fa-search" style="color: white;"></i>
+      </button>
+    </div>
+
+  <div class="links">
+    <!-- <a routerLink="/register">Register</a> -->
+    <a routerLink="/user-dashboard/profile">Profile</a>
+
+    <a routerLink="/">Logout</a>
+  </div>
+</nav>
+
+  <div class="form-container">
+    <form (ngSubmit)="save()">
+      <label>Name</label>
+      <input [(ngModel)]="product.name"       name="name"       required />
+  
+      <label>Description</label>
+      <textarea [(ngModel)]="product.description" name="description"></textarea>
+  
+      <label>Quantity</label>
+      <input type="number" [(ngModel)]="product.quantity"   name="quantity" required />
+  
+      <label>Image URL</label>
+      <input [(ngModel)]="product.imageUrl"   name="imageUrl" required />
+  
+      <label>Price</label>
+      <input type="number" [(ngModel)]="product.price"      name="price" required />
+  
+      <button type="submit" class="btn submit">Update</button>
+    </form>
+  </div>

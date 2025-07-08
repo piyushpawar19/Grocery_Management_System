@@ -1,0 +1,47 @@
+<nav class="navbar">
+
+  <div class="logo"><a href="home.component.html" style="text-decoration:none;color: #fff;"> Grocery<span>Mart</span></a>
+  </div>
+  <!-- <input type="text" placeholder="Search groceries..." /> -->
+  
+  <!-- <div class="search-container">
+      <input type="text" placeholder="Search groceries..." />
+      <button type="submit">
+        <i class="fa fa-search" style="color: white;"></i>
+      </button>
+    </div> -->
+
+  <div class="links">
+    <!-- <a routerLink="/register">Register</a> -->
+    <a (click)="showLogoutConfirm = true" style="cursor: pointer;">Logout</a>
+
+  </div>
+</nav>
+
+<div class="invoice">
+  <h2>Invoice</h2>
+  <p>Order #: {{ orderId }}</p>
+  <p>Date: {{ date | date:'medium' }}</p>
+  <table>
+    <thead><tr><th>Item</th><th>Qty</th><th>Price</th></tr></thead>
+    <tbody>
+      <tr *ngFor="let i of items">
+        <td>{{ i.title }}</td><td>{{ i.quantity }}</td><td>$ {{ (i.price*i.quantity).toFixed(2) }}</td>
+      </tr>
+    </tbody>
+    <tfoot><tr><td colspan="2">Total</td><td>$ {{ total.toFixed(2) }}</td></tr></tfoot>
+  </table>
+  <p>Delivery Address:</p>
+  <p>{{ address }}</p>
+</div>
+
+<!-- Logout Confirmation Dialog -->
+<div class="dialog-overlay" *ngIf="showLogoutConfirm">
+  <div class="dialog-box">
+    <p>Are you sure you want to logout?</p>
+    <div class="dialog-buttons">
+      <button (click)="confirmLogout()" class="yes">Yes</button>
+      <button (click)="cancelLogout()" class="no">No</button>
+    </div>
+  </div>
+</div>

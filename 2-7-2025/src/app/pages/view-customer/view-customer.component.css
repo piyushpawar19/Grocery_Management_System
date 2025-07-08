@@ -1,0 +1,111 @@
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem;
+  background: #437057;
+  color: white;
+  font-family: Arial, Helvetica, sans-serif;
+  height: 60px;
+  border-radius: 5px;
+}
+.navbar .logo {
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  font-size: 25px;
+  margin-left: 1rem;
+}
+.navbar .logo span {
+  font-weight: bold;
+}
+.navbar .links a {
+  margin-left: 2rem;
+  color: white;
+  text-decoration: none;
+  font-weight: 600;
+}
+.navbar .links {
+  padding-right: 20px;
+}
+
+.table-container {
+  padding: 1rem;
+  font-family: 'Segoe UI', sans-serif;
+}
+.table-container h2 {
+  margin-bottom: 1rem;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+th, td {
+  border: 1px solid #ddd;
+  padding: 0.75rem;
+  text-align: left;
+}
+.btn {
+  padding: 0.3rem 0.6rem;
+  cursor: pointer;
+  border: none;
+  border-radius: 4px;
+  transition: background 0.2s;
+}
+.btn.delete {
+  background: #90d69f;
+  color: white;
+}
+.btn.delete:hover {
+  background: #c33;
+}
+.pagination {
+  margin-top: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.pagination button {
+  padding: 0.3rem 0.6rem;
+  cursor: pointer;
+}
+
+/* ---------- Modal Dialog Styles (same as ViewProduct) ---------- */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+.modal {
+  background: #fff;
+  padding: 1.5rem 2rem;
+  border-radius: 8px;
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+.modal p {
+  margin-bottom: 1rem;
+  font-weight: bold;
+  color: #333;
+}
+.modal .btn {
+  width: auto;
+  margin: 0 0.5rem;
+}
+.modal .btn.update {
+  background: #437057;
+  color: white;
+}
+.modal .btn.update:hover {
+  background: #2e4b3b;
+}
+.modal .btn.delete {
+  background: #e94e4e;
+  color: white;
+}
+.modal .btn.delete:hover {
+  background: #c33;
+}
+

@@ -1,0 +1,198 @@
+.admin-dashboard {
+  display: flex;
+  flex-direction: column;
+  height: 80vh;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f9f9f9;
+}
+
+
+.navbar {
+display: flex;
+align-items: center;
+justify-content: space-between;
+padding: 1rem;
+background: #437057;
+color: white;
+font-family: Arial, Helvetica, sans-serif;
+height: 60px;
+border-radius: 5px;
+}
+.navbar .logo {
+font-family: Verdana, Geneva, Tahoma, sans-serif;
+font-size: 25px;
+margin-left: 1rem;
+}
+.navbar .logo span {
+font-weight: bold;
+}
+
+.navbar .search-container {
+display: flex;
+align-items: center;
+background: #557e67;
+border: solid white 2px;
+border-radius: 15px;
+overflow: hidden;
+padding: 0px;
+margin-right: -600px;
+}
+.navbar .search-container input {
+border-radius: 1rem;
+width: 300px;
+height: 20px;
+padding-left: 15px;
+border: none;
+background-color: #557e67;
+}
+.navbar .search-container input::placeholder {
+color: white;
+}
+.navbar .search-container button {
+background-color: #557e67;
+border: none;
+}
+
+.navbar .search-container button {
+width: 15%;
+height: 30px;
+}
+
+.navbar .links a {
+margin-left: 2rem;
+color: white;
+text-decoration: none;
+font-weight: 600;
+}
+
+.navbar .links {
+padding-right: 20px;
+}
+
+/* .navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  background-color: #4a90e2;
+  color: white;
+}
+
+.search-bar {
+  padding: 0.5rem;
+  border-radius: 5px;
+  border: none;
+  width: 200px;
+}
+
+.navbar-buttons .btn {
+  background-color: white;
+  color: #4a90e2;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  margin-left: 1rem;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.navbar-buttons .logout {
+  background-color: #e94e4e;
+  color: white;
+}
+
+.navbar-buttons .btn:hover {
+  opacity: 0.8;
+} */
+
+.main-container {
+  display: flex;
+  flex: 1;
+}
+
+.sidebar {
+  width: 250px;
+  background-color: #b3c5bb;
+  padding: 2rem 1rem;
+  border-right: 1px solid #ddd;
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar-btn {
+  padding: 1rem;
+  margin-bottom: 1rem;
+  background-color: #557e67;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  text-align: left;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.sidebar-btn:hover {
+  background-color: #437057;
+}
+
+.dashboard-content {
+  flex: 1;
+  padding: 2rem;
+}
+
+.dashboard-content h1 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+.dashboard-content p {
+  font-size: 1.1rem;
+  color: #666;
+}
+.dialog-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.dialog-box {
+  background: white;
+  padding: 2rem;
+  border-radius: 10px;
+  text-align: center;
+  width: 300px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+  font-family: Arial, sans-serif;
+}
+
+.dialog-buttons {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: space-between;
+}
+
+.dialog-buttons button {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 5px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.dialog-buttons .yes {
+  background-color: #e94e4e;
+  color: white;
+}
+
+.dialog-buttons .no {
+  background-color: #ccc;
+  color: black;
+}
+

@@ -1,0 +1,179 @@
+/* Existing Navbar + Table + Buttons + Pagination */
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem;
+  background: #437057;
+  color: white;
+  font-family: Arial, Helvetica, sans-serif;
+  height: 60px;
+  border-radius: 5px;
+}
+.navbar .logo {
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  font-size: 25px;
+  margin-left: 1rem;
+}
+.navbar .logo span {
+  font-weight: bold;
+}
+.navbar .search-container {
+  display: flex;
+  align-items: center;
+  background: #557e67;
+  border: solid white 2px;
+  border-radius: 15px;
+  overflow: hidden;
+  padding: 0px;
+  margin-right: -600px;
+}
+.navbar .search-container input {
+  border-radius: 1rem;
+  width: 300px;
+  height: 20px;
+  padding-left: 15px;
+  border: none;
+  background-color: #557e67;
+}
+.navbar .search-container input::placeholder {
+  color: white;
+}
+.navbar .search-container button {
+  background-color: #557e67;
+  border: none;
+  width: 15%;
+  height: 30px;
+}
+.navbar .links a {
+  margin-left: 2rem;
+  color: white;
+  text-decoration: none;
+  font-weight: 600;
+}
+.navbar .links {
+  padding-right: 20px;
+}
+
+.table-container {
+  padding: 1rem;
+  font-family: 'Segoe UI', sans-serif;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+th, td {
+  border: 1px solid #ddd;
+  padding: 0.75rem;
+  text-align: left;
+}
+
+.btn {
+  padding: 0.3rem 0.6rem;
+  cursor: pointer;
+  border: none;
+  border-radius: 4px;
+  transition: background 0.2s;
+}
+.btn.update {
+  background: #557e67;
+  color: white;
+  margin-right: 0.5rem;
+}
+.btn.delete {
+  background: #e94e4e;
+  color: white;
+}
+.btn.update:hover {
+  background: #437057;
+}
+.btn.delete:hover {
+  background: #c33;
+}
+
+.pagination {
+  margin-top: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.pagination button {
+  padding: 0.3rem 0.6rem;
+  cursor: pointer;
+}
+
+/* New: Modal Dialog Styles */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+.modal {
+  background: white;
+  padding: 1.5rem 2rem;
+  border-radius: 8px;
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+}
+.modal p {
+  margin-bottom: 1rem;
+  font-weight: bold;
+}
+.modal .btn {
+  width: auto;
+  margin: 0 0.5rem;
+}
+
+.dialog-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.dialog-box {
+  background: white;
+  padding: 2rem;
+  border-radius: 10px;
+  text-align: center;
+  width: 300px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+  font-family: Arial, sans-serif;
+}
+
+.dialog-buttons {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: space-between;
+}
+
+.dialog-buttons button {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 5px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.dialog-buttons .yes {
+  background-color: #e94e4e;
+  color: white;
+}
+
+.dialog-buttons .no {
+  background-color: #ccc;
+  color: black;
+}
+

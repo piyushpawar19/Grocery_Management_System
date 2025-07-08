@@ -1,0 +1,229 @@
+
+
+
+
+
+
+
+
+/* ✅ Existing Styles (Unchanged) */
+.order-form {
+  max-width: 400px;
+  margin: 1rem auto;
+  padding: 3rem;
+  border: 1px solid #ccc;
+  /* background-color: #fff; */
+  background-color: #d9e2dd;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+.order-form h2{
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  font-size: 30px;
+}
+.order-form p{
+  font-size: 16px;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+.order-form .validate{
+  color: red;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+label {
+  padding-top: 10px;
+  display: block;
+  margin-top: 0.5rem;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+input {
+  width: 100%;
+  padding: 0.5rem;
+  margin-top: 0.25rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+div {
+  color: #21382b;
+  font-size: 0.8rem;
+}
+button {
+  margin-top: 1rem;
+  padding: 0.5rem 1rem;
+  width: 100%;
+  background-color: #437057;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+button:hover {
+  background-color: #21382b;
+}
+
+
+
+/* ✅ New Styles for Modal Dialog (Appended) */
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+.modal {
+  background: #c1dbcc;
+  padding: 2rem;
+  border-radius: 8px;
+  text-align: center;
+  max-width: 300px;
+  width: 80%;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+.modal p {
+  margin-bottom: 1.5rem;
+  font-weight: bold;
+  font-size: 14px;
+}
+.modal button {
+  padding: 0.5rem .8rem;
+  background: #557e67;
+  color: white;
+  font-size: 12px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+}
+.modal button:hover {
+  background: #21382b;
+}
+
+/*   
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem;
+  background: #437057;
+  color: white;
+  font-family: Arial, Helvetica, sans-serif;
+  height: 60px;
+  border-radius: 5px;
+}
+.navbar .logo {
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  font-size: 25px;
+  margin-left: 1rem;
+}
+.navbar .logo span {
+  font-weight: bold;
+}
+
+.navbar .search-container {
+  display: flex;
+  align-items: center;
+  background: #557e67;
+  border: solid white 2px;
+  border-radius: 15px;
+  overflow: hidden;
+  padding: 0px;
+  margin-right: -600px;
+}
+.navbar .search-container input {
+  border-radius: 1rem;
+  width: 300px;
+  height: 20px;
+  padding-left: 15px;
+  border: none;
+  background-color: #557e67;
+  outline: none;
+}
+.navbar .search-container input::placeholder {
+  color: white;
+}
+.navbar .search-container button {
+  background-color: #557e67;
+  border: none;
+}
+
+.navbar .search-container button {
+  width: 15%;
+  height: 30px;
+}
+
+.navbar .links a {
+  margin-left: 2rem;
+  color: white;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.navbar .links {
+  padding-right: 20px;
+} */
+
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem;
+  background: #437057;
+  color: white;
+  font-family: Arial, Helvetica, sans-serif;
+  height: 60px;
+  border-radius: 5px;
+  }
+  .navbar .logo {
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  font-size: 25px;
+  margin-left: 1rem;
+  }
+  .navbar .logo span {
+  font-weight: bold;
+  }
+  
+  .navbar .search-container {
+  display: flex;
+  align-items: center;
+  background: #557e67;
+  border: solid white 2px;
+  border-radius: 15px;
+  overflow: hidden;
+  padding: 0px;
+  margin-right: -600px;
+  }
+  .navbar .search-container input {
+  border-radius: 1rem;
+  width: 300px;
+  height: 20px;
+  padding-left: 15px;
+  border: none;
+  background-color: #557e67;
+  }
+  .navbar .search-container input::placeholder {
+  color: white;
+  }
+  .navbar .search-container button {
+  background-color: #557e67;
+  border: none;
+  }
+  
+  .navbar .search-container button {
+  width: 15%;
+  height: 30px;
+  }
+  
+  .navbar .links a {
+  margin-left: 2rem;
+  color: white;
+  text-decoration: none;
+  font-weight: 600;
+  }
+  
+  .navbar .links {
+  padding-right: 20px;
+  }

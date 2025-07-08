@@ -1,0 +1,79 @@
+
+<nav class="navbar">
+  <div class="logo">
+    <a href="home.component.html" style="text-decoration:none;color: #fff;">
+      Grocery<span>Mart</span>
+    </a>
+  </div>
+  <div class="links">
+    <a routerLink="/user-dashboard/profile">Profile</a>
+    <a (click)="showLogoutConfirm = true" style="cursor: pointer;">Logout</a>
+
+  </div>
+</nav>
+
+<div class="table-container">
+  <h2>All Customers</h2>
+
+  <table>
+    <thead>
+      <tr>
+        <th>S.No</th>
+        <th>Customer_ID</th>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Phone</th>
+        <th>Address</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let c of displayed; let i = index">
+        <td>{{ (page - 1) * perPage + i + 1 }}</td>
+        <td>{{ c.id }}</td>
+        <td>{{ c.name }}</td>
+        <td>{{ c.email }}</td>
+        <td>{{ c.phone }}</td>
+        <td>{{ c.address }}</td>
+        <td>
+          <button class="btn delete" (click)="delete(c.id)">Delete</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="pagination">
+    <button (click)="prev()" [disabled]="page === 1">Prev</button>
+    <span>Page {{ page }}</span>
+    <button (click)="next()" [disabled]="page * perPage >= allCustomers.length">Next</button>
+  </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal-backdrop" *ngIf="showConfirmBox">
+  <div class="modal">
+    <p>Are you sure you want to delete this customer?</p>
+    <button class="btn update" (click)="confirmDelete()">Yes</button>
+    <button class="btn delete" (click)="cancelDelete()">No</button>
+  </div>
+</div>
+
+<!-- Deleted-Success Modal -->
+<div class="modal-backdrop" *ngIf="showSuccessBox">
+  <div class="modal">
+    <p>Customer deleted successfully!</p>
+    <button class="btn update" (click)="closeSuccess()">OK</button>
+  </div>
+</div>
+
+<!-- Logout Confirmation Dialog -->
+<div class="dialog-overlay" *ngIf="showLogoutConfirm">
+  <div class="dialog-box">
+    <p>Are you sure you want to logout?</p>
+    <div class="dialog-buttons">
+      <button (click)="confirmLogout()" class="yes">Yes</button>
+      <button (click)="cancelLogout()" class="no">No</button>
+    </div>
+  </div>
+</div>
+

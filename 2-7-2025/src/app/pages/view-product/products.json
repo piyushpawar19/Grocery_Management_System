@@ -1,0 +1,34 @@
+[
+    {
+      "id": 1001,
+      "name": "Apple",
+      "description": "Fresh red apples imported from USA",
+      "quantity": 50,
+      "imageUrl": "https://example.com/images/apple.jpg",
+      "price": 1.2
+    },
+    {
+      "id": 1002,
+      "name": "Banana",
+      "description": "Sweet yellow bananas",
+      "quantity": 100,
+      "imageUrl": "https://example.com/images/banana.jpg",
+      "price": 0.5
+    },
+    {
+      "id": 1003,
+      "name": "Mango",
+      "description": "Tropical mangoes, juicy and ripe",
+      "quantity": 30,
+      "imageUrl": "https://example.com/images/mango.jpg",
+      "price": 2.0
+    },
+    {
+      "id": 1004,
+      "name": "Orange",
+      "description": "Citrus oranges full of vitamin C",
+      "quantity": 80,
+      "imageUrl": "https://example.com/images/orange.jpg",
+      "price": 1.0
+    }
+  ]

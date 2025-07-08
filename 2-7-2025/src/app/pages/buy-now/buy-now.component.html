@@ -1,0 +1,82 @@
+<nav class="navbar">
+  
+  <!-- <button class="btn back" (click)="goBack()">←</button> -->
+  <div class="logo"><a href="home.component.html" style="text-decoration:none;color: #fff;
+  margin-right: -60px;
+    "> Grocery<span>Mart</span></a>
+  </div>
+  <!-- <input type="text" placeholder="Search groceries..." /> -->
+  
+  <!-- <div class="search-container">
+      <input type="text" placeholder="Search groceries..." />
+      <button type="submit">
+        <i class="fa fa-search" style="color: white;"></i>
+      </button>
+    </div> -->
+
+   
+  <!-- <div class="links">
+    <a routerLink="/register">Register</a>
+    <a routerLink="/login-selection">Login</a>
+  </div> -->
+  <div class="links">
+    <!-- <a routerLink="/add-to-cart">Cart</a> -->
+    <a routerLink="/user-dashboard/profile">Profile</a>
+    <a (click)="showLogoutConfirm = true" style="cursor: pointer;">Logout</a>
+
+  </div>
+</nav>
+
+
+<div class="order-form">
+  <h2>Order Details</h2>
+  <p>Total Items: {{ totalItems }}</p>
+  <p>Total Price: ${{ totalAmount.toFixed(2) }}</p>
+
+  <form [formGroup]="form" (ngSubmit)="placeOrder()">
+    <label>Card Holder Name</label>
+    <input formControlName="cardName" />
+    <div *ngIf="form.controls['cardName'].invalid && form.controls['cardName'].touched">
+      Name must contain letters only.
+    </div>
+
+    <label>Card Number</label>
+    <input formControlName="cardNumber" maxlength="16" />
+    <div *ngIf="form.controls['cardNumber'].invalid && form.controls['cardNumber'].touched">
+      Card number must be 16 digits.
+    </div>
+
+    <label>CVV</label>
+    <input formControlName="cvv" maxlength="3" type="password" />
+    <div *ngIf="form.controls['cvv'].invalid && form.controls['cvv'].touched">
+      CVV must be 3 digits.
+    </div>
+
+    <label>Expiry (MM/YY)</label>
+    <input formControlName="expiry" maxlength="5" placeholder="MM/YY" />
+    <div *ngIf="form.controls['expiry'].errors?.['expired'] && form.controls['expiry'].touched">
+      Card expired.
+    </div>
+
+    <button type="submit" [disabled]="form.invalid">Place Order</button>
+  </form>
+</div>
+
+<!-- Modal dialog -->
+<div class="modal-backdrop" *ngIf="showDialog">
+  <div class="modal">
+    <p>Order placed successfully!</p>
+    <button (click)="confirmDialog()">OK</button>
+  </div>
+</div>
+
+<!-- Logout Confirmation Dialog -->
+<div class="dialog-overlay" *ngIf="showLogoutConfirm">
+  <div class="dialog-box">
+    <p>Are you sure you want to logout?</p>
+    <div class="dialog-buttons">
+      <button (click)="confirmLogout()" class="yes">Yes</button>
+      <button (click)="cancelLogout()" class="no">No</button>
+    </div>
+  </div>
+</div>

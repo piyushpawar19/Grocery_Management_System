@@ -1,0 +1,4 @@
+.navbar { display: flex; align-items: center; justify-content: space-between; padding: 1rem; background: #4CAF50; color: white; }
+.navbar .logo span { font-weight: bold; }
+.navbar input { width: 40%; padding: 0.5rem; }
+.navbar .links a { margin-left: 1rem; color: white; text-decoration: none; }

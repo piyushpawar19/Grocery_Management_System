@@ -1,0 +1,123 @@
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem;
+  background: #437057;
+  color: white;
+  font-family: Arial, Helvetica, sans-serif;
+  height: 60px;
+  border-radius: 5px;
+}
+.navbar .logo {
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  font-size: 25px;
+  margin-left: 1rem;
+}
+.navbar .logo span {
+  font-weight: bold;
+}
+
+.navbar .search-container {
+  display: flex;
+  align-items: center;
+  background: #557e67;
+  border: solid white 2px;
+  border-radius: 15px;
+  overflow: hidden;
+  padding: 0px;
+  margin-right: -600px;
+}
+.navbar .search-container input {
+  border-radius: 1rem;
+  width: 300px;
+  height: 20px;
+  padding-left: 15px;
+  border: none;
+  background-color: #557e67;
+}
+.navbar .search-container input::placeholder {
+  color: white;
+}
+.navbar .search-container button {
+  background-color: #557e67;
+  border: none;
+}
+
+.navbar .search-container button {
+  width: 15%;
+  height: 30px;
+}
+
+.navbar .links a {
+  margin-left: 2rem;
+  color: white;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.navbar .links {
+  padding-right: 20px;
+}
+
+/* .form-container {
+  max-width: 400px;
+  margin: 2rem auto;
+  padding: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+} */
+
+.form-container {
+  width: 400px;
+/* max-width: 400px; */
+margin: 2rem auto;
+padding: 3.5rem;
+border: 3px solid #437057;
+border-radius: 8px;
+background-color: #d9e2dd;
+/* display: flex;
+align-items: center; */
+}
+.form-container h2{
+  text-align: center;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  color: #21382b;
+  /* margin-bottom: 20px; */
+
+}
+.form-container input {
+  width: 100%;
+  padding: 0.5rem;
+  margin: 0.5rem 0;
+  border-radius: 5px;
+  /* margin-right: 150px; */
+  
+}
+
+.form-container a {
+  display: block;
+  text-align: right;
+  margin-top: 0.5rem;
+}
+
+.form-container button {
+  width: 150px;
+  padding: 0.75rem;
+  margin-top: 1rem;
+  margin-left: 125px;
+  text-align: center;
+  border-radius: 10px;
+  background-color: #437057;
+  color: #d9e2dd;
+}
+.form-container button:hover{
+    background-color: #21382b;
+}
+
+.form-container a{
+  text-decoration: none;
+  color: #21382b;
+  text-align: left;
+  margin-top: 20px;
+}

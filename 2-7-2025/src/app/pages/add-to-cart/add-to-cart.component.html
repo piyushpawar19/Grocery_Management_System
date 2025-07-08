@@ -1,0 +1,187 @@
+<!-- <app-navbar [showSearch]="false" [showBack]="true" (backClick)="back()"></app-navbar>
+ -->
+<!-- 
+<nav class="navbar">
+  <div class="logo">
+    <a href="home.component.html" style="text-decoration: none; color: #fff">
+      Grocery<span>Mgmt</span></a
+    >
+  </div>
+
+  <input type="text" placeholder="Search groceries..." />
+  <div class="links">
+    <a routerLink="/">Logout</a>
+  </div>
+</nav> -->
+<nav class="navbar">
+
+  <button class="btn back" (click)="goBack()">←</button>
+  <div class="logo"><a href="home.component.html" style="text-decoration:none;color: #fff;
+  margin-right: -60px;
+    "> Grocery<span>Mart</span></a>
+  </div>
+  <!-- <input type="text" placeholder="Search groceries..." /> -->
+  
+  <div class="search-container">
+      <input type="text" placeholder="Search groceries..." />
+      <button type="submit">
+        <i class="fa fa-search" style="color: white;"></i>
+      </button>
+    </div>
+
+   
+  <!-- <div class="links">
+    <a routerLink="/register">Register</a>
+    <a routerLink="/login-selection">Login</a>
+  </div> -->
+  <div class="links">
+    <!-- <a routerLink="/add-to-cart">Cart</a> -->
+    <a routerLink="/user-dashboard/profile">Profile</a>
+    <a (click)="showLogoutConfirm = true" style="cursor: pointer;">Logout</a>
+
+  </div>
+</nav>
+
+<!-- <div class="cart-container">
+  <div class="cart-item" *ngFor="let c of items">
+    <span>{{ c.title }}</span>
+    <div class="controls">
+      <button (click)="decrement(c)">-</button>
+      <span>{{ c.quantity }}</span>
+      <button (click)="increment(c)">+</button>
+      <button (click)="remove(c)">Remove</button>
+    </div>
+    <span>$ {{ (c.quantity * c.price).toFixed(2) }}</span>
+  </div> -->
+<!-- <table class="cart-container">
+  <thead>
+    <tr>
+      <th>Product</th>
+      <th>Quantity</th>
+      <th>Total</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr class="cart-item" *ngFor="let c of items">
+      <td>
+        <span>{{ c.title }}</span>
+      </td>
+      <td>
+        <div class="controls">
+          <button (click)="decrement(c)">-</button>
+          <span>{{ c.quantity }}</span>
+          <button (click)="increment(c)">+</button>
+        </div>
+      </td>
+      <td>
+        <span>$ {{ (c.quantity * c.price).toFixed(2) }}</span>
+      </td>
+      <td>
+        <button (click)="remove(c)">Remove</button>
+      </td>
+    </tr>
+  </tbody>
+</table> -->
+<h1>Your Cart Items</h1>
+<!-- <table class="cart-container">
+  <thead>
+    <tr>
+      <th>Product</th>
+      <th>Quantity</th>
+      <th>Total</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr class="cart-item" *ngFor="let c of items">
+      <td class="product-cell"> -->
+
+        <!-- [src]="c.image" -->
+
+
+        <!-- <img src="../../../assets/images/apple.jpg" alt="{{ c.title }}" class="product-image" />
+        <span>{{ c.title }}</span>
+      </td>
+      <td>
+        <div class="controls">
+          <button (click)="decrement(c)">-</button>
+          <span>{{ c.quantity }}</span>
+          <button (click)="increment(c)">+</button>
+        </div>
+      </td>
+      <td>
+        <span>$ {{ (c.quantity * c.price).toFixed(2) }}</span>
+      </td>
+      <td>
+        <button (click)="remove(c)">Remove</button>
+      </td>
+    </tr>
+  </tbody>
+</table> -->
+
+  <table class="cart-container">
+  <thead>
+    <tr>
+      <th>Product</th>
+      <th>Price</th>
+      <th>Quantity</th>
+      <th>Total</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr class="cart-item" *ngFor="let c of items">
+      <td class="product-cell">
+        <img src="../../../assets/images/apple.jpg" alt="{{ c.title }}" class="product-image" />
+        <span>{{ c.title }}</span>
+      </td>
+      <td>
+        <span>$ {{ c.price.toFixed(2) }}</span>
+      </td>
+      <td>
+        <div class="controls">
+          <button (click)="decrement(c)">-</button>
+          <span>{{ c.quantity }}</span>
+          <button (click)="increment(c)">+</button>
+        </div>
+      </td>
+      <td>
+        <span>$ {{ (c.quantity * c.price).toFixed(2) }}</span>
+      </td>
+      <td>
+        <button (click)="remove(c)">Remove</button>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+  <!-- <div class="summary">
+    <p>Total Items: {{ totalItems }}</p>
+    <p>Total: $ {{ totalAmount.toFixed(2) }}</p>
+    <button (click)="buyNow()">Buy Now</button>
+  </div> -->
+
+  <div class="summary">
+  <p class="summary-line">
+    <span>Total Items:</span>
+    <span>{{ totalItems }}</span>
+  </p>
+  <p class="summary-line">
+    <span>Total:</span>
+    <span>$ {{ totalAmount.toFixed(2) }}</span>
+  </p>
+  <button (click)="buyNow()" class="checkout-button">Check out</button>
+</div>
+
+<!-- </div> -->
+<!-- Logout Confirmation Dialog -->
+<div class="dialog-overlay" *ngIf="showLogoutConfirm">
+  <div class="dialog-box">
+    <p>Are you sure you want to logout?</p>
+    <div class="dialog-buttons">
+      <button (click)="confirmLogout()" class="yes">Yes</button>
+      <button (click)="cancelLogout()" class="no">No</button>
+    </div>
+  </div>
+</div>

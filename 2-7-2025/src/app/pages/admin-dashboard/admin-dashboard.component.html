@@ -1,0 +1,56 @@
+
+<div class="admin-dashboard">
+  
+  <nav class="navbar">
+  
+    <div class="logo"><a href="home.component.html" style="text-decoration:none;color: #fff;"> Grocery<span>Mart</span></a>
+    </div>
+    <!-- <input type="text" placeholder="Search groceries..." /> -->
+    
+    <div class="search-container">
+        <input type="text" placeholder="Search groceries..." />
+        <button type="submit">
+          <i class="fa fa-search" style="color: white;"></i>
+        </button>
+      </div>
+  
+    <div class="links">
+      <!-- <a routerLink="/register">Register</a> -->
+      <a routerLink="/user-dashboard/profile">Profile</a>
+  
+      <a (click)="showLogoutConfirm = true" style="cursor: pointer;">Logout</a>
+
+    </div>
+  </nav>
+      <!-- <nav class="navbar">
+        <input type="text" placeholder="Search..." class="search-bar" />
+        <div class="navbar-buttons">
+          <button class="btn" (click)="profile()">Profile</button>
+          <button class="btn logout" (click)="logout()">Logout</button>
+        </div>
+      </nav> -->
+    
+      <div class="main-container">
+        <aside class="sidebar">
+          <button routerLink="/admin/insert-product" class="sidebar-btn">Insert Product</button>
+          <button routerLink="/admin/view-product" class="sidebar-btn">View Products</button>
+          <button routerLink="/admin/view-customer" class="sidebar-btn">View Customers</button>
+        </aside>
+    
+        <section class="dashboard-content">
+          <h1>Welcome to Admin Dashboard</h1>
+          <p>Please use the sidebar to manage the application.</p>
+        </section>
+      </div>
+    </div>
+
+    <!-- Logout Confirmation Dialog -->
+<div class="dialog-overlay" *ngIf="showLogoutConfirm">
+  <div class="dialog-box">
+    <p>Are you sure you want to logout?</p>
+    <div class="dialog-buttons">
+      <button (click)="confirmLogout()" class="yes">Yes</button>
+      <button (click)="cancelLogout()" class="no">No</button>
+    </div>
+  </div>
+</div>

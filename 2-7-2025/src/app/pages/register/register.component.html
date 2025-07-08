@@ -1,0 +1,94 @@
+<nav class="navbar">
+  <div class="logo">
+    <a routerLink="/home" style="text-decoration:none;color:#fff;">
+      Grocery<span>Mart</span>
+    </a>
+  </div>
+  <div class="links">
+    <a routerLink="/login-selection">Login</a>
+  </div>
+</nav>
+
+<div class="form-container">
+  <h2>Register</h2>
+  <form [formGroup]="regForm" (ngSubmit)="onSubmit()">
+    <!-- Name -->
+    <input
+      formControlName="name"
+      type="text"
+      placeholder="Name"
+      [class.invalid]="isInvalid('name')"
+    />
+    <div class="error" *ngIf="isInvalid('name')">
+      {{ getErrorMsg('name') }}
+    </div>
+
+    <!-- Email -->
+    <input
+      formControlName="email"
+      type="email"
+      placeholder="Email"
+      [class.invalid]="isInvalid('email')"
+    />
+    <div class="error" *ngIf="isInvalid('email')">
+      {{ getErrorMsg('email') }}
+    </div>
+
+    <!-- Phone -->
+    <input
+      formControlName="phone"
+      type="tel"
+      placeholder="Phone Number"
+      [class.invalid]="isInvalid('phone')"
+    />
+    <div class="error" *ngIf="isInvalid('phone')">
+      {{ getErrorMsg('phone') }}
+    </div>
+
+    <!-- Address -->
+    <input
+      formControlName="address"
+      type="text"
+      placeholder="Address"
+      [class.invalid]="isInvalid('address')"
+    />
+    <div class="error" *ngIf="isInvalid('address')">
+      {{ getErrorMsg('address') }}
+    </div>
+
+    <!-- Password -->
+    <input
+      formControlName="password"
+      type="password"
+      placeholder="Password"
+      [class.invalid]="isInvalid('password')"
+    />
+    <div class="error" *ngIf="isInvalid('password')">
+      {{ getErrorMsg('password') }}
+    </div>
+
+    <!-- Confirm Password -->
+    <input
+      formControlName="confirmPassword"
+      type="password"
+      placeholder="Confirm Password"
+      [class.invalid]="isInvalid('confirmPassword')"
+    />
+    <div class="error" *ngIf="isInvalid('confirmPassword')">
+      {{ getErrorMsg('confirmPassword') }}
+    </div>
+
+    <button type="submit" [disabled]="regForm.invalid">Sign Up</button>
+  </form>
+
+  <p>Already registered? <a routerLink="/admin-login">Go to Login</a></p>
+</div>
+
+<!-- Modal Dialog -->
+<div class="modal-backdrop" *ngIf="showDialog">
+  <div class="modal">
+    <p>You have successfully registered!</p>
+    <button (click)="onDialogClose()">OK</button>
+  </div>
+</div>
+

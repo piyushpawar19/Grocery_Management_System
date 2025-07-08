@@ -1,0 +1,96 @@
+<nav class="navbar">
+  <div class="logo">
+    <a href="home.component.html" style="text-decoration: none; color: #fff">
+      Grocery<span>Mart</span></a
+    >
+  </div>
+  <!-- <input type="text" placeholder="Search groceries..." /> -->
+
+  <div class="search-container">
+    <input type="text" placeholder="Search groceries..." />
+    <button type="submit">
+      <i class="fa fa-search" style="color: white"></i>
+    </button>
+  </div>
+
+  <div class="links">
+    <!-- <a routerLink="/register">Register</a> -->
+    <a routerLink="/user-dashboard/profile">Profile</a>
+
+    <a (click)="showLogoutConfirm = true" style="cursor: pointer">Logout</a>
+  </div>
+</nav>
+
+<div class="form-container">
+  <h2>Add New Product</h2>
+  <form [formGroup]="productForm" (ngSubmit)="addProduct()">
+    <!-- Product Name -->
+    <label>Product Name</label>
+    <input
+      type="text"
+      formControlName="productName"
+      [class.invalid]="isInvalid('productName')"
+    />
+    <div class="error" *ngIf="isInvalid('productName')">
+      {{ getErrorMsg("productName") }}
+    </div>
+
+    <!-- Description -->
+    <label>Description</label>
+    <textarea formControlName="productDescription"></textarea>
+
+    <!-- Quantity -->
+    <label>Quantity</label>
+    <input
+      type="number"
+      formControlName="quantity"
+      [class.invalid]="isInvalid('quantity')"
+    />
+    <div class="error" *ngIf="isInvalid('quantity')">
+      {{ getErrorMsg("quantity") }}
+    </div>
+
+    <!-- Image URL -->
+    <label>Image URL</label>
+    <input
+      type="text"
+      formControlName="imageUrl"
+      [class.invalid]="isInvalid('imageUrl')"
+    />
+    <div class="error" *ngIf="isInvalid('imageUrl')">
+      {{ getErrorMsg("imageUrl") }}
+    </div>
+
+    <!-- Price -->
+    <label>Price</label>
+    <input
+      type="number"
+      formControlName="price"
+      [class.invalid]="isInvalid('price')"
+    />
+    <div class="error" *ngIf="isInvalid('price')">
+      {{ getErrorMsg("price") }}
+    </div>
+
+    <button type="submit">Add</button>
+  </form>
+</div>
+
+<!-- Success Dialog -->
+<div class="modal-backdrop" *ngIf="showDialog">
+  <div class="modal">
+    <p>Product added successfully!</p>
+    <button (click)="closeDialog()">OK</button>
+  </div>
+</div>
+
+<!-- Logout Confirmation Dialog -->
+<div class="dialog-overlay" *ngIf="showLogoutConfirm">
+  <div class="dialog-box">
+    <p>Are you sure you want to logout?</p>
+    <div class="dialog-buttons">
+      <button (click)="confirmLogout()" class="yes">Yes</button>
+      <button (click)="cancelLogout()" class="no">No</button>
+    </div>
+  </div>
+</div>
