@@ -22,7 +22,7 @@ export class AdminLoginComponent implements OnInit {
           if (res && res.customerId) {
             localStorage.setItem('customerId', res.customerId.toString());
           }
-          this.router.navigate(['/user-dashboard']);
+          this.router.navigate(['/admin-dashboard']);
         },
         error: (err) => {
           alert('Login failed. Please check your credentials.');

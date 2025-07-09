@@ -1,12 +1,15 @@
 <nav class="navbar">
-  
-  <!-- <button class="btn back" (click)="goBack()">←</button> -->
-  <div class="logo"><a href="home.component.html" style="text-decoration:none;color: #fff;
-  margin-right: -60px;
-    "> Grocery<span>Mart</span></a>
+  <button class="btn back" (click)="goBack()">←</button>
+  <div class="logo">
+    <a
+      href="home.component.html"
+      style="text-decoration: none; color: #fff; margin-right: -60px"
+    >
+      Grocery<span>Mart</span></a
+    >
   </div>
   <!-- <input type="text" placeholder="Search groceries..." /> -->
-  
+
   <!-- <div class="search-container">
       <input type="text" placeholder="Search groceries..." />
       <button type="submit">
@@ -14,7 +17,6 @@
       </button>
     </div> -->
 
-   
   <!-- <div class="links">
     <a routerLink="/register">Register</a>
     <a routerLink="/login-selection">Login</a>
@@ -22,27 +24,43 @@
   <div class="links">
     <!-- <a routerLink="/add-to-cart">Cart</a> -->
     <a routerLink="/user-dashboard/profile">Profile</a>
-    <a (click)="showLogoutConfirm = true" style="cursor: pointer;">Logout</a>
-
+    <a (click)="showLogoutConfirm = true" style="cursor: pointer">Logout</a>
   </div>
 </nav>
-
 
 <div class="order-form">
   <h2>Order Details</h2>
   <p>Total Items: {{ totalItems }}</p>
   <p>Total Price: ${{ totalAmount.toFixed(2) }}</p>
 
+  <!-- Error message -->
+  <div
+    *ngIf="errorMsg"
+    class="error-message"
+    style="color: red; margin-bottom: 10px"
+  >
+    {{ errorMsg }}
+  </div>
+
   <form [formGroup]="form" (ngSubmit)="placeOrder()">
     <label>Card Holder Name</label>
     <input formControlName="cardName" />
-    <div *ngIf="form.controls['cardName'].invalid && form.controls['cardName'].touched">
+    <div
+      *ngIf="
+        form.controls['cardName'].invalid && form.controls['cardName'].touched
+      "
+    >
       Name must contain letters only.
     </div>
 
     <label>Card Number</label>
     <input formControlName="cardNumber" maxlength="16" />
-    <div *ngIf="form.controls['cardNumber'].invalid && form.controls['cardNumber'].touched">
+    <div
+      *ngIf="
+        form.controls['cardNumber'].invalid &&
+        form.controls['cardNumber'].touched
+      "
+    >
       Card number must be 16 digits.
     </div>
 
@@ -54,11 +72,16 @@
 
     <label>Expiry (MM/YY)</label>
     <input formControlName="expiry" maxlength="5" placeholder="MM/YY" />
-    <div *ngIf="form.controls['expiry'].errors?.['expired'] && form.controls['expiry'].touched">
+    <div
+      *ngIf="form.controls['expiry'].errors?.['expired'] && form.controls['expiry'].touched"
+    >
       Card expired.
     </div>
 
-    <button type="submit" [disabled]="form.invalid">Place Order</button>
+    <button type="submit" [disabled]="form.invalid || loading">
+      <span *ngIf="!loading">Place Order</span>
+      <span *ngIf="loading">Processing...</span>
+    </button>
   </form>
 </div>
 

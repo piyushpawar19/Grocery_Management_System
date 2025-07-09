@@ -41,7 +41,7 @@
 <section class="hero">
   <h1>Welcome to GroceryMart</h1>
   <p>Your Grocery Store's New Best Friend.</p>
-  <a href="/register" class="cta-button">Get Started</a>
+  <a (click)="scrollToProducts()" class="cta-button">Get Explore</a>
 </section>
 <!-- <div class="grid-container">
   <div class="product-card" *ngFor="let p of products" (click)="viewProduct(p.id)">
@@ -51,7 +51,7 @@
   </div>
 </div> -->
 
-<section class="products">
+<section class="products" #productsSection>
   <h2>Products</h2>
   <div class="grid">
     <div class="card" *ngFor="let p of products">
@@ -59,8 +59,30 @@
       <h3>{{ p.productName }}</h3>
       <p>{{ p.productDescription }}</p>
       <span class="price">₹{{ p.price }}</span>
-      <button type="button" aria-label="Add Product to Cart">
-        Add to Cart
+      <div class="quantity-info">
+        <span class="quantity-label">Quantity:</span>
+        <span
+          class="quantity-value"
+          [class.low-stock]="p.quantity <= 5"
+          [class.out-of-stock]="p.quantity === 0"
+        >
+          {{ p.quantity === 0 ? "Out of Stock" : p.quantity }}
+        </span>
+      </div>
+      <button
+        type="button"
+        aria-label="Add Product to Cart"
+        [disabled]="p.quantity === 0"
+        (click)="addToCart(p)"
+        [class.added-to-cart]="isAddedToCart(p.productId)"
+      >
+        {{
+          p.quantity === 0
+            ? "Out of Stock"
+            : isAddedToCart(p.productId)
+            ? "Added to Cart"
+            : "Add to Cart"
+        }}
       </button>
     </div>
   </div>

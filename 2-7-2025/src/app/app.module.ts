@@ -5,6 +5,8 @@ import { RouterModule} from '@angular/router';
 // import {InsertProductComponent} from './pages/insert-product-page/insert-product.component'
 import {HttpClientModule} from '@angular/common/http'
 import { CommonModule} from '@angular/common';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { BasicAuthInterceptor } from './interceptors/basic-auth.interceptor';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -61,7 +63,9 @@ import { ChangePasswordComponent } from './pages/change-password/change-password
     CommonModule,
     HttpClientModule,
   ],
-  providers: [],
+  providers: [
+    { provide: HTTP_INTERCEPTORS, useClass: BasicAuthInterceptor, multi: true }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

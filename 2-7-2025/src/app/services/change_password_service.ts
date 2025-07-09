@@ -10,7 +10,11 @@ export class ChangePasswordService {
 
   constructor(private http: HttpClient) {}
 
-  changePassword(customerId: number, data: any): Observable<any> {
+  changePassword(data: any): Observable<any> {
+    const customerId = localStorage.getItem('customerId');
+    if (!customerId) {
+      throw new Error('Customer ID not found in localStorage');
+    }
     return this.http.put(`${this.baseUrl}/${customerId}/password`, data);
   }
 }

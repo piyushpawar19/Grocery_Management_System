@@ -103,6 +103,7 @@
   border-radius: 5px;
   font-family: Verdana, Geneva, Tahoma, sans-serif;
   font-weight: 600;
+  cursor: pointer;
 }
 
 .hero .cta-button:hover {
@@ -193,4 +194,52 @@
   margin-right: 25px;
   border: block;
   border-color: #ddd;
+}
+
+.card button:disabled {
+  background: #666;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.card button.added-to-cart {
+  background: #4CAF50;
+  color: white;
+  cursor: default;
+}
+
+.card button.added-to-cart:hover {
+  background: #4CAF50;
+}
+
+.quantity-info {
+  margin: 0.5rem 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 14px;
+}
+
+.quantity-label {
+  font-weight: 600;
+  color: #ddd;
+}
+
+.quantity-value {
+  font-weight: bold;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  background-color: #437057;
+  color: white;
+}
+
+.quantity-value.low-stock {
+  background-color: #ff9800;
+  color: white;
+}
+
+.quantity-value.out-of-stock {
+  background-color: #f44336;
+  color: white;
 }

@@ -24,6 +24,10 @@ export class InvoiceComponent implements OnInit {
     this.total = this.items.reduce((sum, i) => sum + i.price*i.quantity, 0);
   }
 
+  goBack(): void {
+    this.router.navigate(['/user-dashboard']);
+  }
+
   back() { this.router.navigate(['/dashboard']); }
 
   showLogoutConfirm = false;

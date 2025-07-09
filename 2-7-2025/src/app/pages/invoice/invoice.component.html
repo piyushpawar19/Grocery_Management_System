@@ -1,9 +1,12 @@
 <nav class="navbar">
-
-  <div class="logo"><a href="home.component.html" style="text-decoration:none;color: #fff;"> Grocery<span>Mart</span></a>
+  <button class="btn back" (click)="goBack()">←</button>
+  <div class="logo">
+    <a href="home.component.html" style="text-decoration: none; color: #fff">
+      Grocery<span>Mart</span></a
+    >
   </div>
   <!-- <input type="text" placeholder="Search groceries..." /> -->
-  
+
   <!-- <div class="search-container">
       <input type="text" placeholder="Search groceries..." />
       <button type="submit">
@@ -13,23 +16,35 @@
 
   <div class="links">
     <!-- <a routerLink="/register">Register</a> -->
-    <a (click)="showLogoutConfirm = true" style="cursor: pointer;">Logout</a>
-
+    <a (click)="showLogoutConfirm = true" style="cursor: pointer">Logout</a>
   </div>
 </nav>
 
 <div class="invoice">
   <h2>Invoice</h2>
   <p>Order #: {{ orderId }}</p>
-  <p>Date: {{ date | date:'medium' }}</p>
+  <p>Date: {{ date | date : "medium" }}</p>
   <table>
-    <thead><tr><th>Item</th><th>Qty</th><th>Price</th></tr></thead>
+    <thead>
+      <tr>
+        <th>Item</th>
+        <th>Qty</th>
+        <th>Price</th>
+      </tr>
+    </thead>
     <tbody>
       <tr *ngFor="let i of items">
-        <td>{{ i.title }}</td><td>{{ i.quantity }}</td><td>$ {{ (i.price*i.quantity).toFixed(2) }}</td>
+        <td>{{ i.title }}</td>
+        <td>{{ i.quantity }}</td>
+        <td>$ {{ (i.price * i.quantity).toFixed(2) }}</td>
       </tr>
     </tbody>
-    <tfoot><tr><td colspan="2">Total</td><td>$ {{ total.toFixed(2) }}</td></tr></tfoot>
+    <tfoot>
+      <tr>
+        <td colspan="2">Total</td>
+        <td>$ {{ total.toFixed(2) }}</td>
+      </tr>
+    </tfoot>
   </table>
   <p>Delivery Address:</p>
   <p>{{ address }}</p>

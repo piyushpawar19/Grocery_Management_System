@@ -70,11 +70,10 @@ export class InsertProductComponent implements OnInit {
       this.productForm.markAllAsTouched();
       return;
     }
-    // Replace with actual adminId logic as needed
-    const adminId = 1;
-    this.insertProductService.addProduct(this.productForm.value, adminId).subscribe({
+    this.insertProductService.addProduct(this.productForm.value).subscribe({
       next: (res) => {
         console.log('Product added:', res);
+        // Show success dialog first
         this.showDialog = true;
       },
       error: (err) => {

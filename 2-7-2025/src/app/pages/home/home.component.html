@@ -31,7 +31,12 @@
       <h3>{{ p.productName }}</h3>
       <p>{{ p.productDescription }}</p>
       <span class="price">₹{{ p.price }}</span>
-      <button type="button" aria-label="Add Product to Cart">
+      <span class="quantity">Qty: {{ p.quantity }}</span>
+      <button
+        type="button"
+        aria-label="Add Product to Cart"
+        (click)="onAddToCart()"
+      >
         Add to Cart
       </button>
     </div>
@@ -43,3 +48,20 @@
     No products found.
   </div>
 </section>
+
+<!-- Modal Dialog for Login Prompt -->
+<div *ngIf="showLoginDialog" class="modal-backdrop">
+  <div class="modal">
+    <p style="font-size: 1.2rem; color: #21382b; font-weight: 600">
+      Login yourself first to add products to cart.
+    </p>
+    <button (click)="goToLoginSelection()">Go to Login Selection</button>
+    <br />
+    <button
+      (click)="closeDialog()"
+      style="background: #888; margin-top: 0.5rem"
+    >
+      Cancel
+    </button>
+  </div>
+</div>

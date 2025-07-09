@@ -188,5 +188,24 @@ input.invalid {
 }
 
 
-
+.btn.back {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 1000;
+  background-color: #b3c5bb;
+  color: #21382b;
+  border: none;
+  padding: 0.4rem 0.6rem;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  font-size: 1.2rem;
+  transition: background 0.2s, color 0.2s;
+}
+.btn.back:hover {
+  background-color: #437057;
+  color: #fff;
+}
 

@@ -1,28 +1,22 @@
 <nav class="navbar">
-
-  <div class="logo"><a href="home.component.html" style="text-decoration:none;color: #fff;
-  margin-right: -60px;
-    "> Grocery<span>Mart</span></a>
+  <button class="btn back" (click)="goBack()">←</button>
+  <div class="logo">
+    <a
+      href="home.component.html"
+      style="text-decoration: none; color: #fff; margin-right: -60px"
+    >
+      Grocery<span>Mart</span></a
+    >
   </div>
-  <!-- <input type="text" placeholder="Search groceries..." /> -->
-  
   <div class="search-container">
-      <input type="text" placeholder="Search groceries..." />
-      <button type="submit">
-        <i class="fa fa-search" style="color: white;"></i>
-      </button>
-    </div>
-
-   
-  <!-- <div class="links">
-    <a routerLink="/register">Register</a>
-    <a routerLink="/login-selection">Login</a>
-  </div> -->
+    <input type="text" placeholder="Search groceries..." />
+    <button type="submit">
+      <i class="fa fa-search" style="color: white"></i>
+    </button>
+  </div>
   <div class="links">
-    <!-- <a routerLink="/add-to-cart">Cart</a> -->
     <a routerLink="/user-dashboard/profile">Profile</a>
-    <a (click)="showLogoutConfirm = true" style="cursor: pointer;">Logout</a>
-
+    <a (click)="showLogoutConfirm = true" style="cursor: pointer">Logout</a>
   </div>
 </nav>
 
@@ -40,60 +34,93 @@
   <section class="content">
     <h2>Basic Details</h2>
     <form [formGroup]="profileForm" (ngSubmit)="save()">
-      <!-- Customer ID -->
+      <div *ngIf="errorMsg" class="error" style="margin-bottom: 10px">
+        {{ errorMsg }}
+      </div>
+      <div *ngIf="loading" class="spinner">Loading...</div>
       <label>Customer ID</label>
-      <input formControlName="id" type="text" />
+      <input formControlName="id" type="text" [disabled]="true" />
 
-      <!-- Name -->
-      <label>Name</label>
+      <label>Enter your name</label>
       <input
-        formControlName="name"
+        formControlName="customerName"
         type="text"
-        [class.invalid]="isInvalid('name')"
+        placeholder="John Doe"
+        [class.invalid]="showError('customerName')"
+        [disabled]="!isEditMode || loading"
+        (blur)="onBlur('customerName')"
       />
-      <div class="error" *ngIf="isInvalid('name')">
-        {{ getErrorMsg('name') }}
+      <div class="error" *ngIf="showError('customerName')">
+        {{ getErrorMsg("customerName") }}
       </div>
 
-      <!-- Email -->
-      <label>Email</label>
-      <input
-        formControlName="email"
-        type="email"
-        [class.invalid]="isInvalid('email')"
-      />
-      <div class="error" *ngIf="isInvalid('email')">
-        {{ getErrorMsg('email') }}
-      </div>
-
-      <!-- Address -->
-      <label>Address</label>
+      <label>Enter your address</label>
       <input
         formControlName="address"
         type="text"
-        [class.invalid]="isInvalid('address')"
+        placeholder="123 Main St, City"
+        [class.invalid]="showError('address')"
+        [disabled]="!isEditMode || loading"
+        (blur)="onBlur('address')"
       />
-      <div class="error" *ngIf="isInvalid('address')">
-        {{ getErrorMsg('address') }}
+      <div class="error" *ngIf="showError('address')">
+        {{ getErrorMsg("address") }}
       </div>
 
-      <!-- Phone -->
-      <label>Phone Number</label>
+      <label>Enter your mobile number</label>
       <input
-        formControlName="phone"
+        formControlName="contactNumber"
         type="tel"
-        [class.invalid]="isInvalid('phone')"
+        maxlength="10"
+        placeholder="9876543210"
+        [class.invalid]="showError('contactNumber')"
+        [disabled]="!isEditMode || loading"
+        (blur)="onBlur('contactNumber')"
       />
-      <div class="error" *ngIf="isInvalid('phone')">
-        {{ getErrorMsg('phone') }}
+      <div class="error" *ngIf="showError('contactNumber')">
+        {{ getErrorMsg("contactNumber") }}
       </div>
+
+      <label>Enter your email</label>
+      <input
+        formControlName="email"
+        type="email"
+        placeholder="john.doe@example.com"
+        [class.invalid]="showError('email')"
+        [disabled]="!isEditMode || loading"
+        (blur)="onBlur('email')"
+      />
+      <div class="error" *ngIf="showError('email')">
+        {{ getErrorMsg("email") }}
+      </div>
+
+      <div class="error" *ngIf="updateErrorMsg">{{ updateErrorMsg }}</div>
 
       <div class="buttons">
-        <button type="button" class="btn edit" (click)="toggleEdit()">
-          {{ editMode ? 'Cancel' : 'Update' }}
+        <button
+          type="button"
+          class="btn edit"
+          (click)="toggleEdit()"
+          *ngIf="!isEditMode && !loading && !errorMsg"
+        >
+          Update
         </button>
-        <button type="submit" class="btn save" *ngIf="editMode">
+        <button
+          type="submit"
+          class="btn save"
+          *ngIf="isEditMode"
+          [disabled]="profileForm.invalid || loading || !!errorMsg"
+        >
           Save
+        </button>
+        <button
+          type="button"
+          class="btn edit"
+          (click)="cancelEdit()"
+          *ngIf="isEditMode"
+          [disabled]="loading"
+        >
+          Cancel
         </button>
       </div>
     </form>
@@ -103,13 +130,13 @@
 <!-- Update Success Dialog -->
 <div class="modal-backdrop" *ngIf="showUpdateDialog">
   <div class="modal">
-    <p>Details updated successfully!</p>
+    <p>
+      Profile updated successfully! Your new email:
+      <b>{{ profileForm.get("email")?.value }}</b>
+    </p>
     <button (click)="closeDialog()">OK</button>
   </div>
 </div>
-
-
-
 
 <!-- Logout Confirmation Dialog -->
 <div class="dialog-overlay" *ngIf="showLogoutConfirm">
@@ -121,4 +148,3 @@
     </div>
   </div>
 </div>
-

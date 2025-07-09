@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class AdminLoginService {
-  private baseUrl = 'http://localhost:8080/api/admin';
+  private baseUrl = 'http://localhost:8080/api/users';
 
   constructor(private http: HttpClient) {}
 

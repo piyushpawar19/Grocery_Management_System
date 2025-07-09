@@ -8,8 +8,8 @@ export class InsertProductService {
 
   constructor(private http: HttpClient) {}
 
-  addProduct(product: any, adminId: number): Observable<any> {
+  addProduct(product: any): Observable<any> {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-    return this.http.post<any>(`${this.baseUrl}?adminId=${adminId}`, product, { headers });
+    return this.http.post<any>(`${this.baseUrl}`, product, { headers });
   }
 }

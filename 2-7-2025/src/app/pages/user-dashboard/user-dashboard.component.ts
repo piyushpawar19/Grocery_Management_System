@@ -1,16 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { Router } from '@angular/router';
-import { GetProductService } from '../../services/get_product_service';
-
-interface Product {
-  productId: number;
-  productName: string;
-  price: number;
-  quantity: number;
-  productDescription: string;
-  reserved: string;
-  // Add imageUrl if you have it in backend, otherwise use a placeholder
-}
+import { GetProductService, Product } from '../../services/get_product_service';
+import { AddToCartService } from '../../services/add-to-cart.service';
 
 @Component({  
   selector: 'app-user-dashboard',  
@@ -18,72 +9,81 @@ interface Product {
   styleUrls: ['./user-dashboard.component.css']
 })
 export class UserDashboardComponent implements OnInit {
+  @ViewChild('productsSection') productsSection!: ElementRef;
+  
   products: Product[] = [];
-  constructor(private router: Router, private getProductService: GetProductService) {}
+  loading = false;
+  errorMsg = '';
+  showLogoutConfirm = false;
+  addedToCartProducts: Set<number> = new Set();
+
+  constructor(
+    private router: Router, 
+    private getProductService: GetProductService,
+    private addToCartService: AddToCartService
+  ) {}
 
   ngOnInit() {
+    this.fetchProducts();
+  }
+
+  scrollToProducts() {
+    this.productsSection.nativeElement.scrollIntoView({ 
+      behavior: 'smooth',
+      block: 'start'
+    });
+  }
+
+  fetchProducts() {
+    this.loading = true;
+    this.errorMsg = '';
     this.getProductService.getAllProducts().subscribe({
-      next: (data) => {
-        console.log('Products from API:', data);
+      next: (data: Product[]) => {
         this.products = data;
+        this.loading = false;
       },
-      error: (err) => { this.products = []; }
+      error: (err) => {
+        this.products = [];
+        this.errorMsg = 'Failed to load products. Please try again.';
+        this.loading = false;
+      }
     });
   }
 
   viewProduct(id: number) {
     this.router.navigate(['/product', id]);
   }
-  
-  // function increaseValue(): void {
-  //   try {
-  //     const numberInput = document.getElementById('number') as HTMLInputElement;
-  //     let value: number = parseInt(numberInput.value, 10);
-  //     if (isNaN(value)) {
-  //       value = 0;
-  //     }
-  //     value++;
-  //     numberInput.value = value.toString();
-  //   } catch (error) {
-  //     console.error("Error increasing value:", error);
-  //     //Consider adding more user-friendly error handling here, e.g., displaying an alert.
-  //   }
-  // }
 
-// }
+  confirmLogout() {
+    this.showLogoutConfirm = false;
+    localStorage.removeItem('username');
+    localStorage.removeItem('password');
+    this.router.navigateByUrl('/user-login');
+  }
 
+  cancelLogout() {
+    this.showLogoutConfirm = false;
+  }
 
+  addToCart(product: Product) {
+    if (product.quantity === 0) {
+      return; // Don't add if out of stock
+    }
 
-// function decreaseValue(): void {
-//   try {
-//     const numberInput = document.getElementById('number') as HTMLInputElement;
-//     let value: number = parseInt(numberInput.value, 10);
-//     if (isNaN(value)) {
-//       value = 0;
-//     } else if (value < 1) {
-//       value = 1;
-//     } else {
-//       value--;
-//     }
-//     numberInput.value = value.toString();
-//   } catch (error) {
-//     console.error("Error decreasing value:", error);
-//     //Consider adding more user-friendly error handling here.
-//   }
-// }
+    this.addToCartService.addToCart(product.productId).subscribe({
+      next: (response) => {
+        // Mark this product as added to cart
+        this.addedToCartProducts.add(product.productId);
+        console.log('Product added to cart successfully:', response);
+      },
+      error: (error) => {
+        console.error('Error adding product to cart:', error);
+        // You can show an error message to the user here
+      }
+    });
+  }
 
-showLogoutConfirm = false;
-
-// Then, add these two methods in the class:
-
-confirmLogout() {
-  this.showLogoutConfirm = false;
-  // Navigate to login/root/home page
-  window.location.href = '/';
-}
-
-cancelLogout() {
-  this.showLogoutConfirm = false;
-}
-
+  isAddedToCart(productId: number): boolean {
+    return this.addedToCartProducts.has(productId);
+  }
 }

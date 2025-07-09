@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { LoginService } from '../../services/login_service';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-user-login',
@@ -12,7 +13,7 @@ import { LoginService } from '../../services/login_service';
 export class LoginComponent implements OnInit {
   loginForm!: FormGroup;
 
-  constructor(private fb: FormBuilder, private router: Router, private loginService: LoginService) {}
+  constructor(private fb: FormBuilder, private router: Router, private loginService: LoginService, private location: Location) {}
 
   ngOnInit(): void {
     this.loginForm = this.fb.group({
@@ -36,5 +37,9 @@ export class LoginComponent implements OnInit {
         }
       });
     }
+  }
+
+  goBack() {
+    this.location.back();
   }
 }
