@@ -34,6 +34,7 @@ public class ProductController {
             return ResponseEntity.ok(products);
         }
     }
+    
     @GetMapping("/{id}")
     public ResponseEntity<?> getProductByIdPath(@PathVariable Integer id) {
         Optional<Product> product = productService.getProductById(id);
@@ -41,26 +42,22 @@ public class ProductController {
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body("Product not found"));
     }
 
-
     @PostMapping
-    public ResponseEntity<?> addProduct(@Valid @RequestBody Product product,
-                                        @RequestParam Integer adminId) {
-        Product created = productService.addProduct(product, adminId);
+    public ResponseEntity<?> addProduct(@Valid @RequestBody Product product) {
+        Product created = productService.addProduct(product);
         return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
 
     @PutMapping("/{productId}")
     public ResponseEntity<?> updateProduct(@PathVariable Integer productId,
-                                           @Valid @RequestBody Product product,
-                                           @RequestParam Integer adminId) {
-        Product updated = productService.updateProduct(productId, product, adminId);
+                                           @Valid @RequestBody Product product) {
+        Product updated = productService.updateProduct(productId, product);
         return ResponseEntity.ok(updated);
     }
 
     @DeleteMapping("/{productId}")
-    public ResponseEntity<?> deleteProduct(@PathVariable Integer productId,
-                                           @RequestParam Integer adminId) {
-        productService.deleteProduct(productId, adminId);
+    public ResponseEntity<?> deleteProduct(@PathVariable Integer productId) {
+        productService.deleteProduct(productId);
         return ResponseEntity.ok("Product deleted successfully");
     }
 } 

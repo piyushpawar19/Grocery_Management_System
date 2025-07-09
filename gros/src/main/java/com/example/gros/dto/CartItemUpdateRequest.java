@@ -3,17 +3,13 @@ package com.example.gros.dto;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 
-public class CartItemRequest {
+public class CartItemUpdateRequest {
 
     @NotNull
     private Integer productId;
 
     @Min(1)
     private int quantity;
-
-    // Add customerId field
-    @NotNull
-    private Integer customerId;
 
     // Getters and Setters
 
@@ -32,12 +28,4 @@ public class CartItemRequest {
     public void setQuantity(int quantity) {
         this.quantity = quantity;
     }
-
-    public Integer getCustomerId() {
-        return customerId;
-    }
-
-    public void setCustomerId(Integer customerId) {
-        this.customerId = customerId;
-    }
-}
+} 

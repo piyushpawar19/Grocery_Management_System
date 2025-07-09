@@ -11,7 +11,11 @@ public class UserUpdateRequest {
     private String address;
 
     @NotNull
-    private Long contactNumber;
+    private String contactNumber;
+
+    @NotBlank
+    @Email
+    private String email;
 
     // Getters and Setters
     public String getCustomerName() { return customerName; }
@@ -20,6 +24,9 @@ public class UserUpdateRequest {
     public String getAddress() { return address; }
     public void setAddress(String address) { this.address = address; }
 
-    public Long getContactNumber() { return contactNumber; }
-    public void setContactNumber(Long contactNumber) { this.contactNumber = contactNumber; }
+    public String getContactNumber() { return contactNumber; }
+    public void setContactNumber(String contactNumber) { this.contactNumber = contactNumber; }
+
+    public String getEmail() { return email; }
+    public void setEmail(String email) { this.email = email; }
 }

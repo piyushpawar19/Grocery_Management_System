@@ -1,6 +1,7 @@
 package com.example.gros.service;
 
 import com.example.gros.dto.CartItemRequest;
+import com.example.gros.dto.CartItemUpdateRequest;
 import com.example.gros.model.*;
 import com.example.gros.repository.*;
 import org.springframework.stereotype.Service;
@@ -37,6 +38,14 @@ public class CartService {
 
     @Transactional
     public void updateCartItem(User user, CartItemRequest request) {
+        CartItem item = cartItemRepo.findByUserAndProduct_ProductId(user, request.getProductId())
+                .orElseThrow(() -> new IllegalArgumentException("Item not found in cart"));
+        item.setQuantity(request.getQuantity());
+        cartItemRepo.save(item);
+    }
+
+    @Transactional
+    public void updateCartItem(User user, CartItemUpdateRequest request) {
         CartItem item = cartItemRepo.findByUserAndProduct_ProductId(user, request.getProductId())
                 .orElseThrow(() -> new IllegalArgumentException("Item not found in cart"));
         item.setQuantity(request.getQuantity());

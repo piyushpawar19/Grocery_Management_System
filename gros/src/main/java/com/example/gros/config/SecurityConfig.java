@@ -8,6 +8,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.Customizer;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @Configuration 
 @EnableWebSecurity
@@ -23,22 +26,24 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
             .csrf(csrf -> csrf.disable())
+            .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .authorizeHttpRequests(requests -> requests
             		 .requestMatchers("/api/users/register", "/api/users/login", "/h2-console/**").permitAll()
             		 .requestMatchers(HttpMethod.GET, "/api/products", "/api/products/**").permitAll()
             		 
+            		 // Open these three endpoints without authentication
+            		 .requestMatchers(HttpMethod.GET, "/api/users/me").permitAll()
+            		 .requestMatchers(HttpMethod.GET, "/api/users/me/*").permitAll()
+            		 .requestMatchers(HttpMethod.PUT, "/api/users/me").permitAll()
+            		 .requestMatchers(HttpMethod.PUT, "/api/users/me/*").permitAll()
+            		 .requestMatchers(HttpMethod.PUT, "/api/users/*/password").permitAll()
             		 
-            		 .requestMatchers(HttpMethod.GET, "/api/order", "/api/order/**").authenticated()
-
-            	
-            		 .requestMatchers(HttpMethod.POST, "/api/order", "/api/order/**").hasRole("CUSTOMER")
-
-            		 .requestMatchers("/api/cart/**").hasRole("CUSTOMER")
-            		 .requestMatchers(HttpMethod.PUT, "/api/users/me").hasAnyRole("CUSTOMER", "ADMIN")
-
-
- 
-            	     .requestMatchers(HttpMethod.POST, "/api/products").hasRole("ADMIN")
+            		 .requestMatchers("/api/cart/**").permitAll()
+            		 
+            		 // Open all order endpoints without authentication
+            		 .requestMatchers("/api/orders/**").permitAll()
+            		 
+            		 .requestMatchers(HttpMethod.POST, "/api/products").hasRole("ADMIN")
             		 .requestMatchers(HttpMethod.PUT, "/api/products/**").hasRole("ADMIN")
             		 .requestMatchers(HttpMethod.DELETE, "/api/products/**").hasRole("ADMIN")
             		 .requestMatchers("/api/users/customers").hasRole("ADMIN")
@@ -57,6 +62,19 @@ public class SecurityConfig {
 	
  
 	}
+	
+	@Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOriginPatterns(java.util.Arrays.asList("*"));
+        configuration.setAllowedMethods(java.util.Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        configuration.setAllowedHeaders(java.util.Arrays.asList("*"));
+        configuration.setAllowCredentials(true);
+        
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
+    }
 }
 
 

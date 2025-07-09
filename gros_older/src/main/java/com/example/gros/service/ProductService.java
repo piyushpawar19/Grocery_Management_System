@@ -1,9 +1,7 @@
 package com.example.gros.service;
 
 import com.example.gros.model.Product;
-import com.example.gros.model.User;
 import com.example.gros.repository.ProductRepository;
-import com.example.gros.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
@@ -12,11 +10,9 @@ import java.util.Optional;
 @Service
 public class ProductService {
     private final ProductRepository productRepository;
-    private final UserRepository userRepository;
 
-    public ProductService(ProductRepository productRepository, UserRepository userRepository) {
+    public ProductService(ProductRepository productRepository) {
         this.productRepository = productRepository;
-        this.userRepository = userRepository;
     }
 
     public List<Product> getAllProducts() {
@@ -32,22 +28,12 @@ public class ProductService {
     }
 
     @Transactional
-    public Product addProduct(Product product, Integer adminId) {
-        User admin = userRepository.findById(adminId)
-                .orElseThrow(() -> new IllegalArgumentException("Admin not found"));
-        if (!"ADMIN".equalsIgnoreCase(admin.getUserRole())) {
-            throw new SecurityException("Only admin can add products");
-        }
+    public Product addProduct(Product product) {
         return productRepository.save(product);
     }
 
     @Transactional
-    public Product updateProduct(Integer productId, Product updatedProduct, Integer adminId) {
-        User admin = userRepository.findById(adminId)
-                .orElseThrow(() -> new IllegalArgumentException("Admin not found"));
-        if (!"ADMIN".equalsIgnoreCase(admin.getUserRole())) {
-            throw new SecurityException("Only admin can update products");
-        }
+    public Product updateProduct(Integer productId, Product updatedProduct) {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new IllegalArgumentException("Product not found"));
         product.setProductName(updatedProduct.getProductName());
@@ -59,12 +45,7 @@ public class ProductService {
     }
 
     @Transactional
-    public void deleteProduct(Integer productId, Integer adminId) {
-        User admin = userRepository.findById(adminId)
-                .orElseThrow(() -> new IllegalArgumentException("Admin not found"));
-        if (!"ADMIN".equalsIgnoreCase(admin.getUserRole())) {
-            throw new SecurityException("Only admin can delete products");
-        }
+    public void deleteProduct(Integer productId) {
         productRepository.deleteById(productId);
     }
 }

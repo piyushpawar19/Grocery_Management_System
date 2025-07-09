@@ -68,7 +68,8 @@ public class UserService {
     public void updateUserProfile(User user, UserUpdateRequest request) {
         user.setCustomerName(request.getCustomerName());
         user.setAddress(request.getAddress());
-        user.setContactNumber(request.getContactNumber());
+        user.setContactNumber(Long.parseLong(request.getContactNumber()));
+        user.setEmail(request.getEmail());
         userRepository.save(user);
     }
 

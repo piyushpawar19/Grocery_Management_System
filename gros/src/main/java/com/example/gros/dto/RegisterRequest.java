@@ -6,14 +6,17 @@ public class RegisterRequest {
     @NotBlank
     private String customerName;
     @NotBlank
-    @Email
+    @Email(message = "Please enter a valid email address.")
     private String email;
     @NotBlank
     @Size(min = 8, max = 100)
     private String password;
     @NotBlank
     private String address;
-    @NotNull
+    @NotNull(message = "Mobile number is required.")
+    @Digits(integer = 10, fraction = 0, message = "Mobile number must be exactly 10 digits.")
+    @Min(value = 1000000000L, message = "Mobile number must be exactly 10 digits.")
+    @Max(value = 9999999999L, message = "Mobile number must be exactly 10 digits.")
     private Long contactNumber;
     private String userRole = "CUSTOMER";
 
