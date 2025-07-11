@@ -29,6 +29,7 @@ import { UpdateProductComponent } from './pages/update-product/update-product.co
 import { ViewCustomerComponent } from './pages/view-customer/view-customer.component';
 import { ProfileComponent } from './pages/profile-page/profile-page.component';
 import { ChangePasswordComponent } from './pages/change-password/change-password.component';
+import { DialogComponent } from './shared/dialog/dialog.component';
 
 
 @NgModule({
@@ -53,6 +54,7 @@ import { ChangePasswordComponent } from './pages/change-password/change-password
     ViewCustomerComponent,
     ProfileComponent,
     ChangePasswordComponent,
+    DialogComponent,
   ],
   imports: [
     BrowserModule,

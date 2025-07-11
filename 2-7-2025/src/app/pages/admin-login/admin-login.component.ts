@@ -7,6 +7,10 @@ import { AdminLoginService } from '../../services/adminLogin_service';
 @Component({ selector: 'app-admin-login', templateUrl: './admin-login.component.html', styleUrls: ['./admin-login.component.css'] })
 export class AdminLoginComponent implements OnInit {
   loginForm!: FormGroup;
+  showDialog: boolean = false;
+  dialogTitle: string = 'Login Failed';
+  dialogMessage: string = 'Login failed, check your credentials';
+  
   constructor(private fb: FormBuilder, private router:Router, private location: Location, private http: HttpClient, private AdminLoginService: AdminLoginService) {}
   ngOnInit() {
     this.loginForm = this.fb.group({
@@ -25,10 +29,15 @@ export class AdminLoginComponent implements OnInit {
           this.router.navigate(['/admin-dashboard']);
         },
         error: (err) => {
-          alert('Login failed. Please check your credentials.');
+          this.showDialog = true;
         }
       });
     }
+  }
+
+  onDialogClose() {
+    this.showDialog = false;
+    this.loginForm.reset();
   }
 
   goBack() {

@@ -12,6 +12,9 @@ import { Location } from '@angular/common';
 })
 export class LoginComponent implements OnInit {
   loginForm!: FormGroup;
+  showDialog: boolean = false;
+  dialogTitle: string = 'Login Failed';
+  dialogMessage: string = 'Login failed, check your credentials';
 
   constructor(private fb: FormBuilder, private router: Router, private loginService: LoginService, private location: Location) {}
 
@@ -33,10 +36,15 @@ export class LoginComponent implements OnInit {
           this.router.navigate(['/user-dashboard']);
         },
         error: (err) => {
-          alert('Login failed. Please check your credentials.');
+          this.showDialog = true;
         }
       });
     }
+  }
+
+  onDialogClose() {
+    this.showDialog = false;
+    this.loginForm.reset();
   }
 
   goBack() {
