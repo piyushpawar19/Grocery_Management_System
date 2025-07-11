@@ -13,7 +13,7 @@ export interface Product {
 
 @Injectable({ providedIn: 'root' })
 export class GetProductService {
-  private baseUrl = 'http://localhost:8080/api/products';
+  private baseUrl = 'http://localhost:9090/api/products';
   constructor(private http: HttpClient) {}
 
   private getAuthHeaders(): HttpHeaders {
@@ -26,6 +26,6 @@ export class GetProductService {
   }
 
   getAllProducts(): Observable<Product[]> {
-    return this.http.get<Product[]>(this.baseUrl, { headers: this.getAuthHeaders() });
+    return this.http.get<Product[]>(this.baseUrl);
   }
 }

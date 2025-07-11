@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class DeleteProductService {
-  private baseUrl = 'http://localhost:8080/api/products';
+  private baseUrl = 'http://localhost:9090/api/products';
 
   constructor(private http: HttpClient) {}
 

@@ -2,7 +2,6 @@ package com.example.gros.controller;
 
 import com.example.gros.dto.CartItemRequest;
 import com.example.gros.dto.CartItemResponse;
-import com.example.gros.dto.CartItemUpdateRequest;
 import com.example.gros.model.CartItem;
 import com.example.gros.model.Product;
 import com.example.gros.model.User;
@@ -20,6 +19,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/cart")
+@CrossOrigin(origins = "http://localhost:4200")
 public class CartController {
     private final CartService cartService;
     private final UserService userService;
@@ -106,42 +106,37 @@ public class CartController {
         }
     }
 
-@PutMapping
-public ResponseEntity<?> updateItem(
-        @RequestParam Integer customerId,
-        @RequestBody @Valid CartItemUpdateRequest req) {
-    try {
-        User user = userService.findById(customerId)
-                .orElseThrow(() -> new IllegalArgumentException("User with customerId " + customerId + " not found"));
+    @PutMapping
+    public ResponseEntity<?> updateItem(@RequestBody @Valid CartItemRequest req) {
+        try {
+            User user = userService.findById(req.getCustomerId())
+                    .orElseThrow(() -> new IllegalArgumentException("User with customerId " + req.getCustomerId() + " not found"));
+            
+            cartService.updateCartItem(user, req);
 
-        cartService.updateCartItem(user, req);
-
-        return ResponseEntity.ok(Map.of(
-            "success", true,
-            "message", "Cart item updated successfully"
-        ));
-    } catch (IllegalArgumentException e) {
-        return ResponseEntity
-                .status(HttpStatus.BAD_REQUEST)
-                .body(Map.of(
-                    "success", false,
-                    "message", e.getMessage()
-                ));
-    } catch (Exception e) {
-        return ResponseEntity
-                .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(Map.of(
-                    "success", false,
-                    "message", "An error occurred: " + e.getMessage()
-                ));
+            return ResponseEntity.ok(Map.of(
+                "success", true,
+                "message", "Cart item updated successfully"
+            ));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(Map.of(
+                        "success", false,
+                        "message", e.getMessage()
+                    ));
+        } catch (Exception e) {
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of(
+                        "success", false,
+                        "message", "An error occurred: " + e.getMessage()
+                    ));
+        }
     }
-}
 
-
-    // Remove item from cart (customerId as query param)
     @DeleteMapping("/{productId}")
-    public ResponseEntity<?> removeItem(@RequestParam Integer customerId,
-                                        @PathVariable Integer productId) {
+    public ResponseEntity<?> removeItem(@RequestParam Integer customerId, @PathVariable Integer productId) {
         try {
             User user = userService.findById(customerId)
                     .orElseThrow(() -> new IllegalArgumentException("User with customerId " + customerId + " not found"));

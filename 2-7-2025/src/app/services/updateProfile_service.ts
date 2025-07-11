@@ -19,7 +19,7 @@ export interface UpdateProfileRequest {
 
 @Injectable({ providedIn: 'root' })
 export class ProfileService {
-  private baseUrl = 'http://localhost:8080/api/users';
+  private baseUrl = 'http://localhost:9090/api/users';
   constructor(private http: HttpClient) {}
 
   getProfile(): Observable<UserDto> {

@@ -6,16 +6,23 @@ import jakarta.validation.constraints.NotNull;
 public class CartItemRequest {
 
     @NotNull
+    private Integer customerId;
+
+    @NotNull
     private Integer productId;
 
     @Min(1)
     private int quantity;
 
-    // Add customerId field
-    @NotNull
-    private Integer customerId;
-
     // Getters and Setters
+
+    public Integer getCustomerId() {
+        return customerId;
+    }
+
+    public void setCustomerId(Integer customerId) {
+        this.customerId = customerId;
+    }
 
     public Integer getProductId() {
         return productId;
@@ -31,13 +38,5 @@ public class CartItemRequest {
 
     public void setQuantity(int quantity) {
         this.quantity = quantity;
-    }
-
-    public Integer getCustomerId() {
-        return customerId;
-    }
-
-    public void setCustomerId(Integer customerId) {
-        this.customerId = customerId;
     }
 }

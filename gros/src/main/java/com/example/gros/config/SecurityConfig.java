@@ -28,34 +28,10 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.disable())
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .authorizeHttpRequests(requests -> requests
-            		 .requestMatchers("/api/users/register", "/api/users/login", "/h2-console/**").permitAll()
-            		 .requestMatchers(HttpMethod.GET, "/api/products", "/api/products/**").permitAll()
-            		 
-            		 // Open these three endpoints without authentication
-            		 .requestMatchers(HttpMethod.GET, "/api/users/me").permitAll()
-            		 .requestMatchers(HttpMethod.GET, "/api/users/me/*").permitAll()
-            		 .requestMatchers(HttpMethod.PUT, "/api/users/me").permitAll()
-            		 .requestMatchers(HttpMethod.PUT, "/api/users/me/*").permitAll()
-            		 .requestMatchers(HttpMethod.PUT, "/api/users/*/password").permitAll()
-            		 
-            		 .requestMatchers("/api/cart/**").permitAll()
-            		 
-            		 // Open all order endpoints without authentication
-            		 .requestMatchers("/api/orders/**").permitAll()
-            		 
-            		 // Open customers endpoints without authentication
-            		 .requestMatchers("/api/users/customers").permitAll()
-            		 .requestMatchers("/api/users/customers/**").permitAll()
-            		 
-            		 .requestMatchers(HttpMethod.POST, "/api/products").hasRole("ADMIN")
-            		 .requestMatchers(HttpMethod.PUT, "/api/products/**").hasRole("ADMIN")
-            		 .requestMatchers(HttpMethod.DELETE, "/api/products/**").hasRole("ADMIN")
-
-            		 .anyRequest().authenticated()
+            		 // Allow all requests - no authentication required
+            		 .anyRequest().permitAll()
             		)
    
-            
-
             .headers(headers -> headers.frameOptions(frame -> frame.disable())) 
             .formLogin(form -> form.disable())
             .httpBasic(Customizer.withDefaults());

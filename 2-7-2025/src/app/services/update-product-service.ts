@@ -32,7 +32,7 @@ export interface BackendProduct {
 
 @Injectable({ providedIn: 'root' })
 export class UpdateProductService {
-  private baseUrl = 'http://localhost:8080/api/products';
+  private baseUrl = 'http://localhost:9090/api/products';
 
   constructor(private http: HttpClient) {}
 

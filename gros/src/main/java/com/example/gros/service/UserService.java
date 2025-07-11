@@ -73,9 +73,7 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public User save(User user) {
-        return userRepository.save(user);
-    }
+
 
     @Transactional
     public void changePassword(Integer customerId, PasswordChangeRequest request) {
