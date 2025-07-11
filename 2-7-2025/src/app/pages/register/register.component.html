@@ -21,7 +21,7 @@
       id="name"
       formControlName="name"
       type="text"
-      placeholder="e.g. JohnDoe"
+      placeholder="e.g. John Doe"
       [class.invalid]="isInvalid('name')"
       (blur)="onBlur('name')"
       (keypress)="onNameKeyPress($event)"
@@ -126,7 +126,7 @@
   <p>Already registered? <a routerLink="/login-selection">Go to Login</a></p>
 </div>
 
-<!-- Modal Dialog -->
+<!-- Modal Dialog for Successful Registration -->
 <div class="modal-backdrop" *ngIf="showDialog">
   <div class="modal">
     <p>
@@ -134,5 +134,29 @@
       <b>{{ registeredEmail }}</b>
     </p>
     <button (click)="onDialogClose()">OK</button>
+  </div>
+</div>
+
+<!-- Modal Dialog for Email Already Exists -->
+<div class="modal-backdrop" *ngIf="showEmailExistsDialog">
+  <div class="modal">
+    <p>
+      <b>Email Already Registered</b><br />
+      {{ emailErrorMessage }}
+      <br />Please try with a different email address.
+    </p>
+    <button (click)="onEmailExistsDialogClose()">OK</button>
+  </div>
+</div>
+
+<!-- Modal Dialog for Email Validation Error -->
+<div class="modal-backdrop" *ngIf="showEmailErrorDialog">
+  <div class="modal">
+    <p>
+      <b>Email Validation Error</b><br />
+      {{ emailErrorMessage }}
+      <br />Please check your email and try again.
+    </p>
+    <button (click)="onEmailErrorDialogClose()">OK</button>
   </div>
 </div>
