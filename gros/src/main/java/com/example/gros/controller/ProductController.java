@@ -11,7 +11,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/products")
-@CrossOrigin
+@CrossOrigin(origins = "http://localhost:4200")
 public class ProductController {
     private final ProductService productService;
 
@@ -19,6 +19,19 @@ public class ProductController {
         this.productService = productService;
     }
 
+    // 1. Specific paths first - search endpoint
+    @GetMapping("/search")
+    public ResponseEntity<List<Product>> searchProducts(@RequestParam("q") String query) {
+        try {
+            List<Product> results = productService.searchProducts(query);
+            return ResponseEntity.ok(results);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(List.of()); // Return empty list on error
+        }
+    }
+
+    // 2. General products endpoint
     @GetMapping
     public ResponseEntity<?> getProducts(@RequestParam(required = false) Integer id,
                                          @RequestParam(required = false) String name) {
@@ -35,7 +48,8 @@ public class ProductController {
         }
     }
     
-    @GetMapping("/{id}")
+    // 3. Numeric ID only - prevents "search" from matching
+    @GetMapping("/{id:\\d+}")
     public ResponseEntity<?> getProductByIdPath(@PathVariable Integer id) {
         Optional<Product> product = productService.getProductById(id);
         return product.<ResponseEntity<?>>map(ResponseEntity::ok)

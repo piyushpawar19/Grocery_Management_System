@@ -33,6 +33,9 @@ export class LoginComponent implements OnInit {
           if (res && res.customerId) {
             localStorage.setItem('customerId', res.customerId.toString());
           }
+          // Store user role information for role-based navigation
+          localStorage.setItem('userRole', 'CUSTOMER');
+          localStorage.setItem('isAdmin', 'false');
           this.router.navigate(['/user-dashboard']);
         },
         error: (err) => {

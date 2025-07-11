@@ -256,3 +256,74 @@ input.invalid, textarea.invalid {
 .dialog-buttons .no:hover {
   background: #5a6268;
 }
+
+/* Read-only field styling */
+.form-container input[readonly], 
+.form-container textarea[readonly] {
+  background-color: #f8f9fa;
+  color: #6c757d;
+  cursor: not-allowed;
+  border: 1px solid #dee2e6;
+}
+
+/* Button section styling */
+.button-section {
+  margin-top: 1.5rem;
+  display: flex;
+  justify-content: center;
+}
+
+.edit-buttons {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+}
+
+/* Update button styling */
+.form-container .btn.update {
+  background: #007bff;
+  color: #fff;
+  border: none;
+  padding: .75rem 1.5rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: .2s;
+  font-weight: 600;
+}
+
+.form-container .btn.update:hover {
+  background-color: #0056b3;
+}
+
+/* Cancel button styling */
+.form-container .btn.cancel {
+  background: #6c757d;
+  color: #fff;
+  border: none;
+  padding: .75rem 1.5rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: .2s;
+  font-weight: 600;
+}
+
+.form-container .btn.cancel:hover {
+  background-color: #545b62;
+}
+
+/* Submit button styling (OK button) */
+.form-container .btn.submit {
+  margin-top: 0;
+  background: #437057;
+  color: #fff;
+  border: none;
+  padding: .75rem 1.5rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: .2s;
+  font-weight: 600;
+}
+
+.form-container .btn.submit:hover{
+  background-color: #21382b;
+}

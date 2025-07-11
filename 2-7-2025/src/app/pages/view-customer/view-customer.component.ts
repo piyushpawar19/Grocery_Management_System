@@ -1,15 +1,8 @@
 
 
 import { Component, OnInit } from '@angular/core';
-import customersData from './customer.json';
-
-interface Customer {
-  id: number;
-  name: string;
-  email: string;
-  phone: string;
-  address: string;
-}
+import { Location } from '@angular/common';
+import { CustomerService, Customer } from '../../services/customer.service';
 
 @Component({
   selector: 'app-view-customer',
@@ -17,24 +10,54 @@ interface Customer {
   styleUrls: ['./view-customer.component.css']
 })
 export class ViewCustomerComponent implements OnInit {
-  allCustomers: Customer[] = [];
+  customers: Customer[] = [];
   page = 1;
   perPage = 10;
+  loading = false;
+  errorMsg = '';
 
   // Dialog state
   showConfirmBox = false;
   showSuccessBox = false;
   private selectedCustomerId: number | null = null;
 
+  constructor(
+    private location: Location,
+    private customerService: CustomerService
+  ) {}
+
+  goBack() {
+    this.location.back();
+  }
+
   ngOnInit() {
-    // Load static JSON data
-    this.allCustomers = customersData;
+    this.loadCustomers();
+  }
+
+  loadCustomers() {
+    this.loading = true;
+    this.errorMsg = '';
+
+    this.customerService.getAllCustomers().subscribe({
+      next: (data) => {
+        this.customers = data;
+        this.loading = false;
+        console.log('Customers loaded successfully:', data);
+      },
+      error: (error) => {
+        console.error('Error loading customers:', error);
+        this.errorMsg = 'Failed to load customers. Please try again.';
+        this.loading = false;
+        // Fallback to empty array if API fails
+        this.customers = [];
+      }
+    });
   }
 
   // Pagination slice
   get displayed(): Customer[] {
     const start = (this.page - 1) * this.perPage;
-    return this.allCustomers.slice(start, start + this.perPage);
+    return this.customers.slice(start, start + this.perPage);
   }
 
   // Start delete flow
@@ -46,8 +69,8 @@ export class ViewCustomerComponent implements OnInit {
   // User confirms deletion
   confirmDelete() {
     if (this.selectedCustomerId !== null) {
-      this.allCustomers = this.allCustomers.filter(
-        c => c.id !== this.selectedCustomerId
+      this.customers = this.customers.filter(
+        c => c.customerId !== this.selectedCustomerId
       );
       this.selectedCustomerId = null;
       this.showConfirmBox = false;
@@ -74,22 +97,20 @@ export class ViewCustomerComponent implements OnInit {
   }
 
   next() {
-    if (this.page * this.perPage < this.allCustomers.length) {
+    if (this.page * this.perPage < this.customers.length) {
       this.page++;
     }
   }
+
   showLogoutConfirm = false;
 
-// Then, add these two methods in the class:
+  confirmLogout() {
+    this.showLogoutConfirm = false;
+    // Navigate to login/root/home page
+    window.location.href = '/';
+  }
 
-confirmLogout() {
-  this.showLogoutConfirm = false;
-  // Navigate to login/root/home page
-  window.location.href = '/';
-}
-
-cancelLogout() {
-  this.showLogoutConfirm = false;
-}
-
+  cancelLogout() {
+    this.showLogoutConfirm = false;
+  }
 }

@@ -42,6 +42,57 @@ input {
   border: 1px solid #ccc;
   border-radius: 4px;
 }
+
+/* Enhanced error message styling */
+.error-message {
+  color: #d32f2f;
+  font-size: 0.8rem;
+  margin-top: 0.25rem;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+/* Expiry container styling */
+.expiry-container {
+  display: flex;
+  gap: 1rem;
+  margin-top: 0.5rem;
+}
+
+.expiry-field {
+  flex: 1;
+}
+
+.expiry-field label {
+  font-size: 0.9rem;
+  margin-bottom: 0.25rem;
+}
+
+.expiry-field select {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: white;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+/* Invalid field styling */
+input.ng-invalid.ng-touched,
+select.ng-invalid.ng-touched {
+  border-color: #d32f2f;
+  box-shadow: 0 0 0 1px #d32f2f;
+}
+
+/* Error modal specific styling */
+.modal.error-modal {
+  border-left: 4px solid #d32f2f;
+}
+
+.modal.error-modal p {
+  color: #d32f2f;
+  font-weight: 500;
+}
+
 div {
   color: #21382b;
   font-size: 0.8rem;

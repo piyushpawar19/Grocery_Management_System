@@ -19,19 +19,15 @@
       Grocery<span>Mart</span></a
     >
   </div>
-  <!-- <input type="text" placeholder="Search groceries..." /> -->
 
-  <div class="search-container">
-    <input type="text" placeholder="Search groceries..." />
-    <button type="submit">
-      <i class="fa fa-search" style="color: white"></i>
-    </button>
-  </div>
+  <app-search-bar
+    (searchResults)="onSearchResults($event)"
+    (searchError)="onSearchError($event)"
+    (searchLoading)="onSearchLoading($event)"
+    (clearSearch)="onClearSearch()"
+  >
+  </app-search-bar>
 
-  <!-- <div class="links">
-    <a routerLink="/register">Register</a>
-    <a routerLink="/login-selection">Login</a>
-  </div> -->
   <div class="links">
     <a routerLink="/add-to-cart">Cart</a>
     <a routerLink="/user-dashboard/profile">Profile</a>
@@ -43,18 +39,25 @@
   <p>Your Grocery Store's New Best Friend.</p>
   <a (click)="scrollToProducts()" class="cta-button">Get Explore</a>
 </section>
-<!-- <div class="grid-container">
-  <div class="product-card" *ngFor="let p of products" (click)="viewProduct(p.id)">
-    <img [src]="p.image" [alt]="p.title">
-    <h3>{{ p.title }}</h3>
-    <p>$ {{ p.price.toFixed(2) }}</p>
-  </div>
-</div> -->
 
 <section class="products" #productsSection>
   <h2>Products</h2>
+
+  <!-- Search Error Message -->
+  <div *ngIf="searchError" class="error-message">
+    {{ searchError }}
+  </div>
+
+  <!-- Loading Indicator -->
+  <div *ngIf="isSearching" class="loading-message">Searching products...</div>
+
+  <!-- No Results Message -->
+  <div *ngIf="showNoResults" class="no-results-message">
+    No products found matching your search.
+  </div>
+
   <div class="grid">
-    <div class="card" *ngFor="let p of products">
+    <div class="card" *ngFor="let p of filteredProducts">
       <img src="../../../assets/images/apple.jpg" alt="{{ p.productName }}" />
       <h3>{{ p.productName }}</h3>
       <p>{{ p.productDescription }}</p>

@@ -4,14 +4,13 @@
       Grocery<span>Mart</span></a
     >
   </div>
-  <!-- <input type="text" placeholder="Search groceries..." /> -->
 
-  <div class="search-container">
-    <input type="text" placeholder="Search groceries..." />
-    <button type="submit">
-      <i class="fa fa-search" style="color: white"></i>
-    </button>
-  </div>
+  <app-search-bar 
+    (searchResults)="onSearchResults($event)"
+    (searchError)="onSearchError($event)"
+    (searchLoading)="onSearchLoading($event)"
+    (clearSearch)="onClearSearch()">
+  </app-search-bar>
 
   <div class="links">
     <a routerLink="/register">Register</a>
@@ -25,8 +24,22 @@
 </section>
 <section class="products">
   <h2>Featured Products</h2>
+
+  <!-- Search Error Message -->
+  <div *ngIf="searchError" class="error-message">
+    {{ searchError }}
+  </div>
+
+  <!-- Loading Indicator -->
+  <div *ngIf="isSearching" class="loading-message">Searching products...</div>
+
+  <!-- No Results Message -->
+  <div *ngIf="showNoResults" class="no-results-message">
+    No products found matching your search.
+  </div>
+
   <div class="grid">
-    <div class="card" *ngFor="let p of products">
+    <div class="card" *ngFor="let p of filteredProducts">
       <img src="../../../assets/images/apple.jpg" alt="{{ p.productName }}" />
       <h3>{{ p.productName }}</h3>
       <p>{{ p.productDescription }}</p>
@@ -42,7 +55,12 @@
     </div>
   </div>
   <div
-    *ngIf="products?.length === 0"
+    *ngIf="
+      filteredProducts?.length === 0 &&
+      !isSearching &&
+      !searchError &&
+      !showNoResults
+    "
     style="text-align: center; color: #888; margin-top: 2rem"
   >
     No products found.

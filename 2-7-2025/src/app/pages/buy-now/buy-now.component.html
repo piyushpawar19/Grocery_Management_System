@@ -45,37 +45,62 @@
   <form [formGroup]="form" (ngSubmit)="placeOrder()">
     <label>Card Holder Name</label>
     <input formControlName="cardName" />
-    <div
-      *ngIf="
-        form.controls['cardName'].invalid && form.controls['cardName'].touched
-      "
-    >
-      Name must contain letters only.
+    <div class="error-message" *ngIf="isFieldInvalid('cardName')">
+      {{ getErrorMessage("cardName") }}
     </div>
 
     <label>Card Number</label>
-    <input formControlName="cardNumber" maxlength="16" />
-    <div
-      *ngIf="
-        form.controls['cardNumber'].invalid &&
-        form.controls['cardNumber'].touched
-      "
-    >
-      Card number must be 16 digits.
+    <input
+      formControlName="cardNumber"
+      maxlength="16"
+      (keypress)="onCardNumberKeyPress($event)"
+      placeholder="1234567890123456"
+    />
+    <div class="error-message" *ngIf="isFieldInvalid('cardNumber')">
+      {{ getErrorMessage("cardNumber") }}
     </div>
 
     <label>CVV</label>
-    <input formControlName="cvv" maxlength="3" type="password" />
-    <div *ngIf="form.controls['cvv'].invalid && form.controls['cvv'].touched">
-      CVV must be 3 digits.
+    <input
+      formControlName="cvv"
+      maxlength="3"
+      type="password"
+      (keypress)="onCvvKeyPress($event)"
+      placeholder="123"
+    />
+    <div class="error-message" *ngIf="isFieldInvalid('cvv')">
+      {{ getErrorMessage("cvv") }}
     </div>
 
-    <label>Expiry (MM/YY)</label>
-    <input formControlName="expiry" maxlength="5" placeholder="MM/YY" />
-    <div
-      *ngIf="form.controls['expiry'].errors?.['expired'] && form.controls['expiry'].touched"
-    >
-      Card expired.
+    <div class="expiry-container">
+      <div class="expiry-field">
+        <label>Expiry Month</label>
+        <select formControlName="expiryMonth">
+          <option value="">Month</option>
+          <option
+            *ngFor="let month of [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]"
+            [value]="month"
+          >
+            {{ month.toString().padStart(1, "") }}
+          </option>
+        </select>
+        <div class="error-message" *ngIf="isFieldInvalid('expiryMonth')">
+          {{ getErrorMessage("expiryMonth") }}
+        </div>
+      </div>
+
+      <div class="expiry-field">
+        <label>Expiry Year</label>
+        <select formControlName="expiryYear">
+          <option value="">Year</option>
+          <option *ngFor="let year of years" [value]="year">
+            {{ year }}
+          </option>
+        </select>
+        <div class="error-message" *ngIf="isFieldInvalid('expiryYear')">
+          {{ getErrorMessage("expiryYear") }}
+        </div>
+      </div>
     </div>
 
     <button type="submit" [disabled]="form.invalid || loading">
@@ -85,11 +110,27 @@
   </form>
 </div>
 
-<!-- Modal dialog -->
+<!-- Success Modal dialog -->
 <div class="modal-backdrop" *ngIf="showDialog">
   <div class="modal">
-    <p>Order placed successfully!</p>
+    <p>{{ dialogMessage }}</p>
     <button (click)="confirmDialog()">OK</button>
+  </div>
+</div>
+
+<!-- Payment Error Modal dialog -->
+<div class="modal-backdrop" *ngIf="showErrorDialog">
+  <div class="modal error-modal">
+    <p>{{ dialogMessage }}</p>
+    <button (click)="closeErrorDialog()">OK</button>
+  </div>
+</div>
+
+<!-- Validation Error Modal dialog -->
+<div class="modal-backdrop" *ngIf="showValidationErrorDialog">
+  <div class="modal error-modal">
+    <p>Please correct the highlighted fields before placing your order.</p>
+    <button (click)="closeValidationErrorDialog()">OK</button>
   </div>
 </div>
 

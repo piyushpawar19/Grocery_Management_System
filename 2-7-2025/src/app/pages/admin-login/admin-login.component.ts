@@ -26,6 +26,9 @@ export class AdminLoginComponent implements OnInit {
           if (res && res.customerId) {
             localStorage.setItem('customerId', res.customerId.toString());
           }
+          // Store admin role information for role-based navigation
+          localStorage.setItem('userRole', 'ADMIN');
+          localStorage.setItem('isAdmin', 'true');
           this.router.navigate(['/admin-dashboard']);
         },
         error: (err) => {

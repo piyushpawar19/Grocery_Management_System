@@ -1,21 +1,29 @@
-
 <nav class="navbar">
+  <button class="btn back" (click)="goBack()">←</button>
   <div class="logo">
-    <a href="home.component.html" style="text-decoration:none;color: #fff;">
+    <a href="home.component.html" style="text-decoration: none; color: #fff">
       Grocery<span>Mart</span>
     </a>
   </div>
   <div class="links">
     <a routerLink="/user-dashboard/profile">Profile</a>
-    <a (click)="showLogoutConfirm = true" style="cursor: pointer;">Logout</a>
-
+    <a (click)="showLogoutConfirm = true" style="cursor: pointer">Logout</a>
   </div>
 </nav>
 
 <div class="table-container">
   <h2>All Customers</h2>
 
-  <table>
+  <!-- Loading state -->
+  <div *ngIf="loading" class="loading-message">Loading customers...</div>
+
+  <!-- Error state -->
+  <div *ngIf="errorMsg" class="error-message">
+    {{ errorMsg }}
+  </div>
+
+  <!-- Customer table -->
+  <table *ngIf="!loading && customers.length > 0">
     <thead>
       <tr>
         <th>S.No</th>
@@ -24,28 +32,36 @@
         <th>Email</th>
         <th>Phone</th>
         <th>Address</th>
-        <th>Actions</th>
+        <!-- <th>Actions</th> -->
       </tr>
     </thead>
     <tbody>
       <tr *ngFor="let c of displayed; let i = index">
         <td>{{ (page - 1) * perPage + i + 1 }}</td>
-        <td>{{ c.id }}</td>
-        <td>{{ c.name }}</td>
+        <td>CUST_{{ c.customerId }}</td>
+        <td>{{ c.customerName }}</td>
         <td>{{ c.email }}</td>
-        <td>{{ c.phone }}</td>
+        <td>{{ c.contactNumber }}</td>
         <td>{{ c.address }}</td>
-        <td>
-          <button class="btn delete" (click)="delete(c.id)">Delete</button>
-        </td>
+        <!-- <td>
+          <button class="btn delete" (click)="delete(c.customerId)">Delete</button>
+        </td> -->
       </tr>
     </tbody>
   </table>
 
-  <div class="pagination">
+  <!-- Empty state -->
+  <div *ngIf="!loading && customers.length === 0" class="empty-state">
+    <p>No customers found.</p>
+  </div>
+
+  <!-- Pagination -->
+  <div class="pagination" *ngIf="customers.length > 0">
     <button (click)="prev()" [disabled]="page === 1">Prev</button>
     <span>Page {{ page }}</span>
-    <button (click)="next()" [disabled]="page * perPage >= allCustomers.length">Next</button>
+    <button (click)="next()" [disabled]="page * perPage >= customers.length">
+      Next
+    </button>
   </div>
 </div>
 
@@ -76,4 +92,3 @@
     </div>
   </div>
 </div>
-

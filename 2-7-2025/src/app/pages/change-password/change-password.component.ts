@@ -9,6 +9,7 @@ import {
 import { Router } from '@angular/router';
 import { ChangePasswordService } from '../../services/change_password_service';
 import { HttpErrorResponse } from '@angular/common/http';
+import { RoleService } from '../../services/role.service';
 
 @Component({
   selector: 'app-change-password',
@@ -23,7 +24,12 @@ export class ChangePasswordComponent implements OnInit {
   // Must be 8+ chars, uppercase, lowercase, number, symbol
   private pwdPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/;
 
-  constructor(private fb: FormBuilder, private router: Router, private changePasswordService: ChangePasswordService) {}
+  constructor(
+    private fb: FormBuilder, 
+    private router: Router, 
+    private changePasswordService: ChangePasswordService,
+    private roleService: RoleService
+  ) {}
 
   ngOnInit(): void {
     this.pwdForm = this.fb.group(
@@ -37,7 +43,9 @@ export class ChangePasswordComponent implements OnInit {
   }
 
   goBack(): void {
-    this.router.navigate(['/user-dashboard']);
+    // Use role-based navigation - go to profile page of appropriate dashboard
+    const profileRoute = this.roleService.getProfileRoute();
+    this.router.navigate([profileRoute]);
   }
 
   // Cross‑field validator

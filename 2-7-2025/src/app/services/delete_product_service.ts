@@ -10,6 +10,10 @@ export class DeleteProductService {
 
   deleteProduct(productId: number): Observable<any> {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-    return this.http.delete(`${this.baseUrl}/${productId}`, { headers });
+    return this.http.delete(`${this.baseUrl}/${productId}`, { 
+      headers,
+      observe: 'response',
+      responseType: 'text'
+    });
   }
 }

@@ -30,6 +30,7 @@ import { ViewCustomerComponent } from './pages/view-customer/view-customer.compo
 import { ProfileComponent } from './pages/profile-page/profile-page.component';
 import { ChangePasswordComponent } from './pages/change-password/change-password.component';
 import { DialogComponent } from './shared/dialog/dialog.component';
+import { SearchBarComponent } from './shared/search-bar/search-bar.component';
 
 
 @NgModule({
@@ -55,6 +56,7 @@ import { DialogComponent } from './shared/dialog/dialog.component';
     ProfileComponent,
     ChangePasswordComponent,
     DialogComponent,
+    SearchBarComponent,
   ],
   imports: [
     BrowserModule,

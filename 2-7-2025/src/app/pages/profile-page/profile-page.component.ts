@@ -9,6 +9,7 @@ import {
 import { ProfileService, UserDto, UpdateProfileRequest } from '../../services/updateProfile_service';
 import { Router } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
+import { RoleService } from '../../services/role.service';
 
 // Custom email regex validator (same as registration)
 const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -37,7 +38,8 @@ export class ProfileComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private profileService: ProfileService,
-    private router: Router
+    private router: Router,
+    private roleService: RoleService
   ) {}
 
   ngOnInit(): void {
@@ -65,7 +67,9 @@ export class ProfileComponent implements OnInit {
   }
 
   goBack(): void {
-    this.router.navigate(['/user-dashboard']);
+    // Use role-based navigation
+    const dashboardRoute = this.roleService.getDashboardRoute();
+    this.router.navigate([dashboardRoute]);
   }
 
   fetchProfile(): void {

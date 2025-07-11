@@ -1,0 +1,21 @@
+<div class="search-container">
+  <input
+    type="text"
+    placeholder="Search products..."
+    [(ngModel)]="searchQuery"
+    (keypress)="onKeyPress($event)"
+    class="search-input"
+  />
+  <button type="button" (click)="onSearch()" class="search-button">
+    <i class="fa fa-search"></i>
+  </button>
+  <button
+    *ngIf="searchQuery"
+    type="button"
+    (click)="onClearSearch()"
+    class="clear-button"
+    title="Clear search"
+  >
+    ×
+  </button>
+</div>

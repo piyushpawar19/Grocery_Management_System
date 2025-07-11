@@ -1,15 +1,18 @@
 <nav class="navbar">
-  
-  <div class="logo"><a href="home.component.html" style="text-decoration:none;color: #fff;"> Grocery<span>Mart</span></a>
+  <button class="btn back" (click)="goBack()">←</button>
+  <div class="logo">
+    <a href="home.component.html" style="text-decoration: none; color: #fff">
+      Grocery<span>Mart</span></a
+    >
   </div>
   <!-- <input type="text" placeholder="Search groceries..." /> -->
-  
+
   <div class="search-container">
-      <input type="text" placeholder="Search groceries..." />
-      <button type="submit">
-        <i class="fa fa-search" style="color: white;"></i>
-      </button>
-    </div>
+    <input type="text" placeholder="Search groceries..." />
+    <button type="submit">
+      <i class="fa fa-search" style="color: white"></i>
+    </button>
+  </div>
 
   <div class="links">
     <!-- <a routerLink="/register">Register</a> -->
@@ -21,13 +24,14 @@
 
 <div class="form-container">
   <h2>Update Product</h2>
-  <form [formGroup]="productForm" (ngSubmit)="save()">
+  <form [formGroup]="productForm">
     <!-- Product Name -->
     <label>Name</label>
     <input
       type="text"
       formControlName="name"
       [class.invalid]="isInvalid('name')"
+      [readonly]="!isEditMode"
     />
     <div class="error" *ngIf="isInvalid('name')">
       {{ getErrorMsg("name") }}
@@ -35,7 +39,7 @@
 
     <!-- Description -->
     <label>Description</label>
-    <textarea formControlName="description"></textarea>
+    <textarea formControlName="description" [readonly]="!isEditMode"></textarea>
 
     <!-- Quantity -->
     <label>Quantity</label>
@@ -43,6 +47,7 @@
       type="number"
       formControlName="quantity"
       [class.invalid]="isInvalid('quantity')"
+      [readonly]="!isEditMode"
     />
     <div class="error" *ngIf="isInvalid('quantity')">
       {{ getErrorMsg("quantity") }}
@@ -54,6 +59,7 @@
       type="text"
       formControlName="imageUrl"
       [class.invalid]="isInvalid('imageUrl')"
+      [readonly]="!isEditMode"
     />
     <div class="error" *ngIf="isInvalid('imageUrl')">
       {{ getErrorMsg("imageUrl") }}
@@ -65,12 +71,34 @@
       type="number"
       formControlName="price"
       [class.invalid]="isInvalid('price')"
+      [readonly]="!isEditMode"
     />
     <div class="error" *ngIf="isInvalid('price')">
       {{ getErrorMsg("price") }}
     </div>
 
-    <button type="submit" class="btn submit">Update</button>
+    <!-- Button Section -->
+    <div class="button-section">
+      <!-- Show Update button when not in edit mode -->
+      <button
+        type="button"
+        class="btn update"
+        *ngIf="!isEditMode"
+        (click)="enterEditMode()"
+      >
+        Update
+      </button>
+
+      <!-- Show Cancel and OK buttons when in edit mode -->
+      <div class="edit-buttons" *ngIf="isEditMode">
+        <button type="button" class="btn cancel" (click)="cancelChanges()">
+          Cancel
+        </button>
+        <button type="button" class="btn submit" (click)="saveChanges()">
+          OK
+        </button>
+      </div>
+    </div>
   </form>
 </div>
 

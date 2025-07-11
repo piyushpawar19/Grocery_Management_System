@@ -13,12 +13,17 @@ export class AdminDashboardComponent {
 
   logout() {
     // Implement logout logic
+    localStorage.removeItem('username');
+    localStorage.removeItem('password');
+    localStorage.removeItem('customerId');
+    localStorage.removeItem('userRole');
+    localStorage.removeItem('isAdmin');
     this.router.navigate(['/']);
   }
 
   profile() {
-    // Implement logout logic
-    this.router.navigate(['/user-dashboard/profile']);
+    // Navigate to admin profile page
+    this.router.navigate(['/admin-dashboard/profile']);
   }
   goTo(route: string) {
     this.router.navigate(["/"]);
@@ -30,6 +35,12 @@ export class AdminDashboardComponent {
 
 confirmLogout() {
   this.showLogoutConfirm = false;
+  // Clear role information
+  localStorage.removeItem('username');
+  localStorage.removeItem('password');
+  localStorage.removeItem('customerId');
+  localStorage.removeItem('userRole');
+  localStorage.removeItem('isAdmin');
   // Navigate to login/root/home page
   window.location.href = '/';
 }

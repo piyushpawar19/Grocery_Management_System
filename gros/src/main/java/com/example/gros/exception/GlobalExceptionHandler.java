@@ -1,55 +1,76 @@
 package com.example.gros.exception;
 
-import com.example.gros.dto.ApiResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
-    @ExceptionHandler(UserNotFoundException.class)
-    public ResponseEntity<ApiResponse> handleUserNotFound(UserNotFoundException ex) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                .body(new ApiResponse(false, ex.getMessage()));
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<Map<String, Object>> handleValidationExceptions(MethodArgumentNotValidException ex) {
+        Map<String, String> errors = new HashMap<>();
+        ex.getBindingResult().getFieldErrors().forEach(error -> {
+            errors.put(error.getField(), error.getDefaultMessage());
+        });
+        
+        Map<String, Object> response = new HashMap<>();
+        response.put("success", false);
+        response.put("message", "Validation failed");
+        response.put("errors", errors);
+        
+        return ResponseEntity.badRequest().body(response);
+    }
+
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ResponseEntity<Map<String, Object>> handleTypeMismatch(MethodArgumentTypeMismatchException ex) {
+        Map<String, Object> response = new HashMap<>();
+        response.put("success", false);
+        response.put("message", "Invalid parameter type: " + ex.getName() + " should be " + ex.getRequiredType().getSimpleName());
+        
+        return ResponseEntity.badRequest().body(response);
+    }
+
+    @ExceptionHandler(MissingServletRequestParameterException.class)
+    public ResponseEntity<Map<String, Object>> handleMissingParameter(MissingServletRequestParameterException ex) {
+        Map<String, Object> response = new HashMap<>();
+        response.put("success", false);
+        response.put("message", "Missing required parameter: " + ex.getParameterName());
+        
+        return ResponseEntity.badRequest().body(response);
     }
 
     @ExceptionHandler(ProductNotFoundException.class)
-    public ResponseEntity<ApiResponse> handleProductNotFound(ProductNotFoundException ex) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                .body(new ApiResponse(false, ex.getMessage()));
+    public ResponseEntity<Map<String, Object>> handleProductNotFound(ProductNotFoundException ex) {
+        Map<String, Object> response = new HashMap<>();
+        response.put("success", false);
+        response.put("message", ex.getMessage());
+        
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
     }
 
-    @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<ApiResponse> handleIllegalArgument(IllegalArgumentException ex) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body(new ApiResponse(false, ex.getMessage()));
+    @ExceptionHandler(UserNotFoundException.class)
+    public ResponseEntity<Map<String, Object>> handleUserNotFound(UserNotFoundException ex) {
+        Map<String, Object> response = new HashMap<>();
+        response.put("success", false);
+        response.put("message", ex.getMessage());
+        
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
     }
-
-//    @ExceptionHandler(MethodArgumentNotValidException.class)
-//    public ResponseEntity<ApiResponse> handleValidation(MethodArgumentNotValidException ex) {
-//        String errorMsg = ex.getBindingResult().getFieldError() != null ?
-//                ex.getBindingResult().getFieldError().getDefaultMessage() : "Validation error";
-//        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-//                .body(new ApiResponse(false, errorMsg));
-//    }
-    
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ApiResponse> handleValidation(MethodArgumentNotValidException ex) {
-        String errorMsg = ex.getBindingResult().getFieldErrors().stream()
-            .map(fieldError -> fieldError.getField() + ": " + fieldError.getDefaultMessage())
-            .reduce((msg1, msg2) -> msg1 + ", " + msg2)
-            .orElse("Validation error");
-
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body(new ApiResponse(false, errorMsg));
-    }
-
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ApiResponse> handleException(Exception ex) {
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(new ApiResponse(false, "An error occurred: " + ex.getMessage()));
+    public ResponseEntity<Map<String, Object>> handleGenericException(Exception ex) {
+        Map<String, Object> response = new HashMap<>();
+        response.put("success", false);
+        response.put("message", "An error occurred: " + ex.getMessage());
+        
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
     }
 }

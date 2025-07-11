@@ -43,11 +43,13 @@ public class SecurityConfig {
             		 // Open all order endpoints without authentication
             		 .requestMatchers("/api/orders/**").permitAll()
             		 
+            		 // Open customers endpoints without authentication
+            		 .requestMatchers("/api/users/customers").permitAll()
+            		 .requestMatchers("/api/users/customers/**").permitAll()
+            		 
             		 .requestMatchers(HttpMethod.POST, "/api/products").hasRole("ADMIN")
             		 .requestMatchers(HttpMethod.PUT, "/api/products/**").hasRole("ADMIN")
             		 .requestMatchers(HttpMethod.DELETE, "/api/products/**").hasRole("ADMIN")
-            		 .requestMatchers("/api/users/customers").hasRole("ADMIN")
-            		 .requestMatchers("/api/users/customers/**").hasRole("ADMIN")
 
             		 .anyRequest().authenticated()
             		)

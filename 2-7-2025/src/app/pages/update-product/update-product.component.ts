@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Location } from '@angular/common';
 import {
   FormBuilder,
   FormGroup,
@@ -26,10 +27,15 @@ export class UpdateProductComponent implements OnInit {
   dialogMessage = '';
   errorMessage = '';
   productId!: number;
+  
+  // New properties for UI state management
+  isEditMode = false;
+  originalFormData: any = {};
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
+    private location: Location,
     private fb: FormBuilder,
     private updateProductService: UpdateProductService
   ) {}
@@ -37,7 +43,7 @@ export class UpdateProductComponent implements OnInit {
   ngOnInit() {
     this.productId = +this.route.snapshot.params['id'];
     
-    // Initialize form with validations similar to insert product
+    // Initialize form with validations copied from insert product
     this.productForm = this.fb.group({
       name: ['', [Validators.required, Validators.maxLength(30)]],
       description: [''],
@@ -70,6 +76,12 @@ export class UpdateProductComponent implements OnInit {
           imageUrl: this.product.imageUrl,
           price: this.product.price
         });
+
+        // Store original data for cancel functionality
+        this.originalFormData = { ...this.productForm.value };
+        
+        // Make form read-only initially
+        this.setFormReadOnly(true);
       },
       error: (err) => {
         console.error('Error loading product:', err);
@@ -91,7 +103,73 @@ export class UpdateProductComponent implements OnInit {
         imageUrl: this.product.imageUrl,
         price: this.product.price
       });
+      
+      // Store original data for cancel functionality
+      this.originalFormData = { ...this.productForm.value };
+      
+      // Make form read-only initially
+      this.setFormReadOnly(true);
     }
+  }
+
+  // Method to toggle form read-only state
+  setFormReadOnly(readOnly: boolean): void {
+    if (readOnly) {
+      this.productForm.disable();
+    } else {
+      this.productForm.enable();
+    }
+  }
+
+  // Method to enter edit mode
+  enterEditMode(): void {
+    this.isEditMode = true;
+    this.setFormReadOnly(false);
+  }
+
+  // Method to cancel changes
+  cancelChanges(): void {
+    this.isEditMode = false;
+    this.productForm.patchValue(this.originalFormData);
+    this.setFormReadOnly(true);
+    this.productForm.markAsUntouched();
+  }
+
+  // Method to save changes
+  saveChanges(): void {
+    if (this.productForm.invalid) {
+      this.productForm.markAllAsTouched();
+      return;
+    }
+
+    const updateData: UpdateProductRequest = {
+      name: this.productForm.value.name,
+      description: this.productForm.value.description,
+      quantity: this.productForm.value.quantity,
+      imageUrl: this.productForm.value.imageUrl,
+      price: this.productForm.value.price
+    };
+
+    this.updateProductService.updateProduct(this.productId, updateData).subscribe({
+      next: (response) => {
+        console.log('Product updated successfully:', response);
+        this.dialogMessage = 'Product updated successfully!';
+        this.showDialog = true;
+        
+        // Update original data and exit edit mode
+        this.originalFormData = { ...this.productForm.value };
+        this.isEditMode = false;
+        this.setFormReadOnly(true);
+        
+        // Also update localStorage for consistency
+        this.updateLocalStorage(updateData);
+      },
+      error: (err) => {
+        console.error('Error updating product:', err);
+        this.errorMessage = err.error?.message || err.message || 'Failed to update product. Please try again.';
+        this.showErrorDialog = true;
+      }
+    });
   }
 
   get f(): { [key: string]: AbstractControl } {
@@ -130,37 +208,6 @@ export class UpdateProductComponent implements OnInit {
     }
   }
 
-  save() {
-    if (this.productForm.invalid) {
-      this.productForm.markAllAsTouched();
-      return;
-    }
-
-    const updateData: UpdateProductRequest = {
-      name: this.productForm.value.name,
-      description: this.productForm.value.description,
-      quantity: this.productForm.value.quantity,
-      imageUrl: this.productForm.value.imageUrl,
-      price: this.productForm.value.price
-    };
-
-    this.updateProductService.updateProduct(this.productId, updateData).subscribe({
-      next: (response) => {
-        console.log('Product updated successfully:', response);
-        this.dialogMessage = 'Product updated successfully!';
-        this.showDialog = true;
-        
-        // Also update localStorage for consistency
-        this.updateLocalStorage(updateData);
-      },
-      error: (err) => {
-        console.error('Error updating product:', err);
-        this.errorMessage = err.error?.message || err.message || 'Failed to update product. Please try again.';
-        this.showErrorDialog = true;
-      }
-    });
-  }
-
   updateLocalStorage(updateData: UpdateProductRequest): void {
     const all: Product[] = JSON.parse(localStorage.getItem('products')||'[]');
     const idx = all.findIndex(p => p.id === this.productId);
@@ -188,6 +235,10 @@ export class UpdateProductComponent implements OnInit {
 
   cancelLogout() {
     this.showLogoutConfirm = false;
+  }
+
+  goBack() {
+    this.location.back();
   }
 }
 

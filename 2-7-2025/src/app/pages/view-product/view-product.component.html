@@ -1,16 +1,18 @@
 <nav class="navbar">
+  <button class="btn back" (click)="goBack()">←</button>
   <div class="logo">
     <a href="home.component.html" style="text-decoration: none; color: #fff">
       Grocery<span>Mart</span>
     </a>
   </div>
 
-  <div class="search-container">
-    <input type="text" placeholder="Search groceries..." />
-    <button type="submit">
-      <i class="fa fa-search" style="color: white"></i>
-    </button>
-  </div>
+  <app-search-bar
+    (searchResults)="onSearchResults($event)"
+    (searchError)="onSearchError($event)"
+    (searchLoading)="onSearchLoading($event)"
+    (clearSearch)="onClearSearch()"
+  >
+  </app-search-bar>
 
   <div class="links">
     <a routerLink="/user-dashboard/profile">Profile</a>
@@ -19,6 +21,19 @@
 </nav>
 
 <div class="table-container">
+  <!-- Search Error Message -->
+  <div *ngIf="searchError" class="error-message">
+    {{ searchError }}
+  </div>
+
+  <!-- Loading Indicator -->
+  <div *ngIf="isSearching" class="loading-message">Searching products...</div>
+
+  <!-- No Results Message -->
+  <div *ngIf="showNoResults" class="no-results-message">
+    No products found matching your search.
+  </div>
+
   <table>
     <thead>
       <tr>
@@ -28,7 +43,7 @@
         <th>Description</th>
         <th>Quantity</th>
         <th>Price</th>
-        <th>Reserved</th>
+        <!-- <th>Reserved</th> -->
         <th>Actions</th>
       </tr>
     </thead>
@@ -40,7 +55,7 @@
         <td>{{ product.productDescription }}</td>
         <td>{{ product.quantity }}</td>
         <td>₹{{ product.price }}</td>
-        <td>{{ product.reserved }}</td>
+        <!-- <td>{{ product.reserved }}</td> -->
         <td>
           <button class="btn update" (click)="update(product.productId)">
             Update
@@ -56,7 +71,10 @@
   <div class="pagination">
     <button (click)="prev()" [disabled]="page === 1">Prev</button>
     <span>Page {{ page }}</span>
-    <button (click)="next()" [disabled]="page * perPage >= allProducts.length">
+    <button
+      (click)="next()"
+      [disabled]="page * perPage >= filteredProducts.length"
+    >
       Next
     </button>
   </div>
@@ -76,6 +94,14 @@
   <div class="modal">
     <p>Product deleted successfully!</p>
     <button class="btn update" (click)="closeDeletedDialog()">OK</button>
+  </div>
+</div>
+
+<!-- Error Dialog for Delete Failure -->
+<div class="modal-backdrop" *ngIf="showErrorDialog">
+  <div class="modal">
+    <p>{{ errorMessage }}</p>
+    <button class="btn update" (click)="closeErrorDialog()">OK</button>
   </div>
 </div>
 

@@ -6,6 +6,7 @@ import {
   AbstractControl
 } from '@angular/forms';
 import { Router } from '@angular/router';
+import { Location } from '@angular/common';
 import { InsertProductService } from '../../services/insert_product_service';
 
 @Component({
@@ -17,7 +18,12 @@ export class InsertProductComponent implements OnInit {
   productForm!: FormGroup;
   showDialog = false;
 
-  constructor(private fb: FormBuilder, private router: Router, private insertProductService: InsertProductService) {}
+  constructor(
+    private fb: FormBuilder, 
+    private router: Router, 
+    private location: Location,
+    private insertProductService: InsertProductService
+  ) {}
 
   ngOnInit(): void {
     this.productForm = this.fb.group({
@@ -84,7 +90,7 @@ export class InsertProductComponent implements OnInit {
 
   closeDialog(): void {
     this.showDialog = false;
-    this.router.navigate(['/view-product']);
+    this.router.navigate(['admin/view-product']);
   }
 
   logout(): void {
@@ -100,5 +106,9 @@ export class InsertProductComponent implements OnInit {
 
   cancelLogout() {
     this.showLogoutConfirm = false;
+  }
+
+  goBack() {
+    this.location.back();
   }
 }
