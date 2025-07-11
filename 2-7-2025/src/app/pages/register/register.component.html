@@ -21,9 +21,10 @@
       id="name"
       formControlName="name"
       type="text"
-      placeholder="e.g. John Doe"
+      placeholder="e.g. JohnDoe"
       [class.invalid]="isInvalid('name')"
       (blur)="onBlur('name')"
+      (keypress)="onNameKeyPress($event)"
     />
     <div class="error" *ngIf="showError('name')">
       {{ getErrorMsg("name") }}
@@ -56,7 +57,7 @@
       formControlName="phone"
       type="text"
       maxlength="10"
-      placeholder="e.g. 9876543210"
+      placeholder="e.g. 9876543210 (start with 6-9)"
       [class.invalid]="isInvalid('phone')"
       (input)="enforcePhoneMaxLength()"
       (blur)="onBlur('phone')"

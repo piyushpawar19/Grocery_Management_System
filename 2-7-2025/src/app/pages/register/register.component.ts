@@ -88,12 +88,27 @@ export class RegisterComponent implements OnInit {
       return { multipleDots: true };
     }
 
+    // Check for multiple domain extensions (e.g., .com.com, .com.in, .com.anything)
+    const afterAtPart = value.split('@')[1];
+    if (afterAtPart) {
+      // Count dots in the domain part
+      const dotCount = (afterAtPart.match(/\./g) || []).length;
+      // If more than one dot, check if it's a valid subdomain structure
+      if (dotCount > 1) {
+        // Pattern to detect multiple top-level domains like .com.com, .in.org, etc.
+        const multipleDomainsPattern = /\.(com|org|net|edu|gov|mil|int|co|in|uk|de|fr|jp|au|ca|us|info|biz|name|museum)\.(com|org|net|edu|gov|mil|int|co|in|uk|de|fr|jp|au|ca|us|info|biz|name|museum|[a-zA-Z]{2,})/i;
+        if (multipleDomainsPattern.test(afterAtPart)) {
+          return { multipleDomainExtensions: true };
+        }
+      }
+    }
+
     // Basic email structure validation
     const emailPattern = /^[a-zA-Z][a-zA-Z0-9._%+-]*@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     return emailPattern.test(value) ? null : { invalidEmailFormat: true };
   }
 
-  // Strict phone validator: exactly 10 digits, numbers only
+  // Strict phone validator: exactly 10 digits, numbers only, must start with 6-9
   private strictPhoneValidator(control: AbstractControl): ValidationErrors | null {
     const value = control.value || '';
     if (!value) return null;
@@ -106,6 +121,11 @@ export class RegisterComponent implements OnInit {
     // Check if exactly 10 digits
     if (value.length !== 10) {
       return { exactlyTenDigits: true };
+    }
+    
+    // Check if starts with 6, 7, 8, or 9
+    if (!/^[6-9]/.test(value)) {
+      return { mustStartWith6789: true };
     }
     
     return null;
@@ -184,6 +204,9 @@ export class RegisterComponent implements OnInit {
       if (errs['multipleDots']) {
         return 'Email cannot contain consecutive dots or multiple domains.';
       }
+      if (errs['multipleDomainExtensions']) {
+        return 'Email cannot contain multiple domain extensions (e.g., .com.com, .com.in).';
+      }
       if (errs['invalidEmailFormat']) {
         return 'Please enter a valid email address.';
       }
@@ -195,6 +218,9 @@ export class RegisterComponent implements OnInit {
       }
       if (errs['exactlyTenDigits']) {
         return 'Mobile number must be exactly 10 digits.';
+      }
+      if (errs['mustStartWith6789']) {
+        return 'Mobile number must start with 6, 7, 8, or 9.';
       }
     }
     
@@ -267,6 +293,17 @@ export class RegisterComponent implements OnInit {
     this.regForm.reset();
     this.submitted = false;
     this.router.navigate(['/login-selection']);
+  }
+
+  // Prevent number input in name field
+  onNameKeyPress(event: KeyboardEvent): boolean {
+    const char = event.key;
+    // Allow only alphabetic characters and prevent numbers
+    if (!/^[A-Za-z]$/.test(char)) {
+      event.preventDefault();
+      return false;
+    }
+    return true;
   }
 
   goBack() {
