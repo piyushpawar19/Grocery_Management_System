@@ -36,13 +36,13 @@ export class RegisterComponent implements OnInit {
           [
             Validators.required,
             Validators.maxLength(30),
-            Validators.pattern(/^[A-Za-z ]+$/)
+            this.alphabetsOnlyValidator
           ]
         ],
-        email: ['', [Validators.required, customEmailValidator]],
+        email: ['', [Validators.required, this.strictEmailValidator]],
         phone: [
           '',
-          [Validators.required, Validators.pattern(/^\d{10}$/)]
+          [Validators.required, this.strictPhoneValidator]
         ],
         address: ['', Validators.required],
         password: [
@@ -59,12 +59,55 @@ export class RegisterComponent implements OnInit {
     );
   }
 
-  // Custom phone validator: must start with 6-9 and be 10 digits
-  private phoneValidator(control: AbstractControl): ValidationErrors | null {
-    const val: string = control.value || '';
-    if (!/^[6-9]\d{9}$/.test(val)) {
-      return { invalidPhone: true };
+  // Strict name validator: only alphabets (no spaces, numbers, or special characters)
+  private alphabetsOnlyValidator(control: AbstractControl): ValidationErrors | null {
+    const value = control.value || '';
+    if (!value) return null;
+    const alphabetPattern = /^[A-Za-z]+$/;
+    return alphabetPattern.test(value) ? null : { alphabetsOnly: true };
+  }
+
+  // Strict email validator
+  private strictEmailValidator(control: AbstractControl): ValidationErrors | null {
+    const value = control.value || '';
+    if (!value) return null;
+
+    // Check if email starts with a number
+    if (/^[0-9]/.test(value)) {
+      return { emailStartsWithNumber: true };
     }
+
+    // Check for exactly one @ symbol
+    const atCount = (value.match(/@/g) || []).length;
+    if (atCount !== 1) {
+      return { invalidAtSymbol: true };
+    }
+
+    // Check for multiple consecutive dots or multiple domains
+    if (value.includes('..') || /\..*\..*\./.test(value)) {
+      return { multipleDots: true };
+    }
+
+    // Basic email structure validation
+    const emailPattern = /^[a-zA-Z][a-zA-Z0-9._%+-]*@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    return emailPattern.test(value) ? null : { invalidEmailFormat: true };
+  }
+
+  // Strict phone validator: exactly 10 digits, numbers only
+  private strictPhoneValidator(control: AbstractControl): ValidationErrors | null {
+    const value = control.value || '';
+    if (!value) return null;
+    
+    // Check if contains only digits
+    if (!/^\d+$/.test(value)) {
+      return { numbersOnly: true };
+    }
+    
+    // Check if exactly 10 digits
+    if (value.length !== 10) {
+      return { exactlyTenDigits: true };
+    }
+    
     return null;
   }
 
@@ -97,14 +140,18 @@ export class RegisterComponent implements OnInit {
     return (this.touchedFields[field] || this.submitted) && this.isInvalid(field);
   }
 
-  // Enforce phone max length in input
+  // Enforce phone to accept only numbers and max 10 digits
   enforcePhoneMaxLength() {
     const phoneControl = this.regForm.get('phone');
     if (phoneControl) {
       let val = phoneControl.value || '';
+      // Remove any non-digit characters
+      val = val.replace(/\D/g, '');
+      // Limit to 10 digits
       if (val.length > 10) {
-        phoneControl.setValue(val.slice(0, 10), { emitEvent: false });
+        val = val.slice(0, 10);
       }
+      phoneControl.setValue(val, { emitEvent: false });
     }
   }
 
@@ -117,32 +164,40 @@ export class RegisterComponent implements OnInit {
       if (field === 'phone') return 'Mobile number is required.';
       return `${this.label(field)} is required.`;
     }
-    if (field === 'name' && errs['maxlength']) {
-      return `Name cannot exceed ${errs['maxlength'].requiredLength} characters.`;
+    
+    if (field === 'name') {
+      if (errs['maxlength']) {
+        return `Name cannot exceed ${errs['maxlength'].requiredLength} characters.`;
+      }
+      if (errs['alphabetsOnly']) {
+        return 'Name can only contain alphabets (A-Z, a-z).';
+      }
     }
-    if (field === 'name' && errs['pattern']) {
-      return `Name can only contain letters and spaces.`;
+    
+    if (field === 'email') {
+      if (errs['emailStartsWithNumber']) {
+        return 'Email address cannot start with a number.';
+      }
+      if (errs['invalidAtSymbol']) {
+        return 'Email must contain exactly one @ symbol.';
+      }
+      if (errs['multipleDots']) {
+        return 'Email cannot contain consecutive dots or multiple domains.';
+      }
+      if (errs['invalidEmailFormat']) {
+        return 'Please enter a valid email address.';
+      }
     }
-    if (field === 'email' && errs['customEmail']) {
-      return 'Please enter a valid email address (e.g. john.doe@example.com).';
-    }
-    if (errs['email']) {
-      return `Please enter a valid email address.`;
-    }
+    
     if (field === 'phone') {
-      if (errs['pattern']) {
-        if (control.value && control.value.length > 10) {
-          return 'Mobile number cannot exceed 10 digits.';
-        }
-        return 'Mobile number must be exactly 10 digits.';
+      if (errs['numbersOnly']) {
+        return 'Mobile number can only contain numbers.';
       }
-      if (control.value && control.value.length > 10) {
-        return 'Mobile number cannot exceed 10 digits.';
-      }
-      if (control.value && control.value.length < 10) {
+      if (errs['exactlyTenDigits']) {
         return 'Mobile number must be exactly 10 digits.';
       }
     }
+    
     if (errs['minlength'] && field === 'password') {
       return `Password must be at least ${errs['minlength'].requiredLength} characters.`;
     }
@@ -217,12 +272,4 @@ export class RegisterComponent implements OnInit {
   goBack() {
     this.location.back();
   }
-}
-
-// Custom email regex validator
-const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-function customEmailValidator(control: AbstractControl): ValidationErrors | null {
-  const value = control.value || '';
-  if (!value) return null;
-  return EMAIL_REGEX.test(value) ? null : { customEmail: true };
 }
