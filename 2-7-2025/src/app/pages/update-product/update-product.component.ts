@@ -71,7 +71,7 @@ export class UpdateProductComponent implements OnInit {
           price: this.product.price
         });
       },
-      error: (err) => {
+      error: (err: any) => {
         console.error('Error loading product:', err);
         // Fallback to localStorage if backend fails
         this.loadFromLocalStorage();
@@ -145,7 +145,7 @@ export class UpdateProductComponent implements OnInit {
     };
 
     this.updateProductService.updateProduct(this.productId, updateData).subscribe({
-      next: (response) => {
+      next: (response: any) => {
         console.log('Product updated successfully:', response);
         this.dialogMessage = 'Product updated successfully!';
         this.showDialog = true;
@@ -153,7 +153,7 @@ export class UpdateProductComponent implements OnInit {
         // Also update localStorage for consistency
         this.updateLocalStorage(updateData);
       },
-      error: (err) => {
+      error: (err: any) => {
         console.error('Error updating product:', err);
         this.errorMessage = err.error?.message || err.message || 'Failed to update product. Please try again.';
         this.showErrorDialog = true;
