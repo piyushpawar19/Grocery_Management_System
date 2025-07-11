@@ -38,7 +38,6 @@
       type="email"
       required
       placeholder="e.g. john.doe@example.com"
-      pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
       [class.invalid]="isInvalid('email')"
       (blur)="onBlur('email')"
     />
@@ -55,7 +54,7 @@
     <input
       id="phone"
       formControlName="phone"
-      type="tel"
+      type="text"
       maxlength="10"
       placeholder="e.g. 9876543210"
       [class.invalid]="isInvalid('phone')"
