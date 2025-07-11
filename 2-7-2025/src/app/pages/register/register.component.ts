@@ -204,12 +204,12 @@ export class RegisterComponent implements OnInit {
       if (errs['multipleDots']) {
         return 'Email cannot contain consecutive dots or multiple domains.';
       }
-             if (errs['multipleDomainExtensions']) {
-         return 'Email cannot contain multiple domain extensions (e.g., .com.com, .com.in).';
-       }
-       if (errs['invalidEmailFormat']) {
-         return 'Please enter a valid email address.';
-       }
+      if (errs['multipleDomainExtensions']) {
+        return 'Email cannot contain multiple domain extensions (e.g., .com.com, .com.in).';
+      }
+      if (errs['invalidEmailFormat']) {
+        return 'Please enter a valid email address.';
+      }
     }
     
     if (field === 'phone') {
