@@ -19,7 +19,10 @@ export class RegisterComponent implements OnInit {
   regForm!: FormGroup;
   submitted = false;
   showDialog = false;
+  showEmailExistsDialog = false;
+  showEmailErrorDialog = false;
   registeredEmail = '';
+  emailErrorMessage = '';
   backendErrors: any = {};
   touchedFields: { [key: string]: boolean } = {};
 
@@ -59,11 +62,11 @@ export class RegisterComponent implements OnInit {
     );
   }
 
-  // Strict name validator: only alphabets (no spaces, numbers, or special characters)
+  // Strict name validator: only alphabets and spaces (no numbers or special characters)
   private alphabetsOnlyValidator(control: AbstractControl): ValidationErrors | null {
     const value = control.value || '';
     if (!value) return null;
-    const alphabetPattern = /^[A-Za-z]+$/;
+    const alphabetPattern = /^[A-Za-z\s]+$/;
     return alphabetPattern.test(value) ? null : { alphabetsOnly: true };
   }
 
@@ -190,7 +193,7 @@ export class RegisterComponent implements OnInit {
         return `Name cannot exceed ${errs['maxlength'].requiredLength} characters.`;
       }
       if (errs['alphabetsOnly']) {
-        return 'Name can only contain alphabets (A-Z, a-z).';
+        return 'Name can only contain alphabets and spaces (A-Z, a-z, space).';
       }
     }
     
@@ -272,17 +275,37 @@ export class RegisterComponent implements OnInit {
       },
       error: (err) => {
         if (err.error && typeof err.error === 'object') {
-          // Map backend errors to fields
-          if (err.error.field && err.error.message) {
-            this.backendErrors[err.error.field] = err.error.message;
+          // Check if it's an email-related error and show dialog
+          if (err.error.field === 'email' || err.error.message?.toLowerCase().includes('email')) {
+            this.emailErrorMessage = err.error.message || 'Email validation failed.';
+            this.showEmailErrorDialog = true;
+          } else if (err.error.message?.toLowerCase().includes('already exists')) {
+            this.emailErrorMessage = err.error.message;
+            this.showEmailExistsDialog = true;
           } else {
-            // If multiple errors
-            Object.keys(err.error).forEach(key => {
-              this.backendErrors[key] = err.error[key];
-            });
+            // Map backend errors to fields for non-email errors
+            if (err.error.field && err.error.message) {
+              this.backendErrors[err.error.field] = err.error.message;
+            } else {
+              // If multiple errors
+              Object.keys(err.error).forEach(key => {
+                this.backendErrors[key] = err.error[key];
+              });
+            }
+          }
+        } else if (err.error && typeof err.error === 'string') {
+          // Handle string error messages
+          if (err.error.toLowerCase().includes('email')) {
+            this.emailErrorMessage = err.error;
+            this.showEmailErrorDialog = true;
+          } else if (err.error.toLowerCase().includes('already exists')) {
+            this.emailErrorMessage = err.error;
+            this.showEmailExistsDialog = true;
+          } else {
+            alert('Registration failed. Please try again.');
           }
         } else {
-        alert('Registration failed. Please try again.');
+          alert('Registration failed. Please try again.');
         }
       }
     });
@@ -295,11 +318,27 @@ export class RegisterComponent implements OnInit {
     this.router.navigate(['/login-selection']);
   }
 
+  onEmailExistsDialogClose(): void {
+    this.showEmailExistsDialog = false;
+    this.emailErrorMessage = '';
+    // Keep the form data, just clear the email field for user to try again
+    this.regForm.get('email')?.setValue('');
+    this.regForm.get('email')?.markAsUntouched();
+  }
+
+  onEmailErrorDialogClose(): void {
+    this.showEmailErrorDialog = false;
+    this.emailErrorMessage = '';
+    // Keep the form data, just clear the email field for user to try again
+    this.regForm.get('email')?.setValue('');
+    this.regForm.get('email')?.markAsUntouched();
+  }
+
   // Prevent number input in name field
   onNameKeyPress(event: KeyboardEvent): boolean {
     const char = event.key;
-    // Allow only alphabetic characters and prevent numbers
-    if (!/^[A-Za-z]$/.test(char)) {
+    // Allow only alphabetic characters and spaces, prevent numbers and special characters
+    if (!/^[A-Za-z\s]$/.test(char)) {
       event.preventDefault();
       return false;
     }
