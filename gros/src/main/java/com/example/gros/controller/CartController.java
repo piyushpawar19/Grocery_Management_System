@@ -78,11 +78,16 @@ public class CartController {
     @PostMapping
     public ResponseEntity<?> addItem(@RequestBody @Valid CartItemRequest req) {
         try {
+            System.out.println("CartController: Received add to cart request - customerId: " + req.getCustomerId() + ", productId: " + req.getProductId() + ", quantity: " + req.getQuantity());
+            
             User user = userService.findById(req.getCustomerId())
                     .orElseThrow(() -> new IllegalArgumentException("User with customerId " + req.getCustomerId() + " not found"));
             
+            System.out.println("CartController: User found - " + user.getCustomerName());
+            
             cartService.addToCart(user, req);
 
+            System.out.println("CartController: Item added to cart successfully");
             return ResponseEntity
                     .status(HttpStatus.CREATED)
                     .body(Map.of(
@@ -90,6 +95,7 @@ public class CartController {
                         "message", "Item added to cart successfully"
                     ));
         } catch (IllegalArgumentException e) {
+            System.out.println("CartController: IllegalArgumentException - " + e.getMessage());
             return ResponseEntity
                     .status(HttpStatus.BAD_REQUEST)
                     .body(Map.of(
@@ -97,6 +103,8 @@ public class CartController {
                         "message", e.getMessage()
                     ));
         } catch (Exception e) {
+            System.out.println("CartController: Exception - " + e.getMessage());
+            e.printStackTrace();
             return ResponseEntity
                     .status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(Map.of(
@@ -107,10 +115,29 @@ public class CartController {
     }
 
     @PutMapping
-    public ResponseEntity<?> updateItem(@RequestBody @Valid CartItemRequest req) {
+    public ResponseEntity<?> updateItem(@RequestParam Integer customerId, @RequestBody Map<String, Object> requestBody) {
         try {
-            User user = userService.findById(req.getCustomerId())
-                    .orElseThrow(() -> new IllegalArgumentException("User with customerId " + req.getCustomerId() + " not found"));
+            User user = userService.findById(customerId)
+                    .orElseThrow(() -> new IllegalArgumentException("User with customerId " + customerId + " not found"));
+            
+            // Extract productId and quantity from request body
+            Integer productId = (Integer) requestBody.get("productId");
+            Integer quantity = (Integer) requestBody.get("quantity");
+            
+            if (productId == null || quantity == null) {
+                return ResponseEntity
+                        .status(HttpStatus.BAD_REQUEST)
+                        .body(Map.of(
+                            "success", false,
+                            "message", "productId and quantity are required"
+                        ));
+            }
+            
+            // Create CartItemRequest for the service
+            CartItemRequest req = new CartItemRequest();
+            req.setCustomerId(customerId);
+            req.setProductId(productId);
+            req.setQuantity(quantity);
             
             cartService.updateCartItem(user, req);
 

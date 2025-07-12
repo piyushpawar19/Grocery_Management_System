@@ -223,6 +223,42 @@ input.invalid {
   background: #21382b;
 }
 
+/* Error Modal Styles */
+.error-modal {
+  background: #fff;
+  padding: 1.5rem 2rem;
+  border-radius: 8px;
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+  border-left: 4px solid #dc3545;
+}
+
+.error-modal h3 {
+  color: #dc3545;
+  margin-bottom: 1rem;
+  font-size: 1.2rem;
+}
+
+.error-modal p {
+  color: #333;
+  margin-bottom: 1rem;
+  line-height: 1.4;
+}
+
+.error-modal button {
+  background: #dc3545;
+  color: #fff;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.error-modal button:hover {
+  background: #c82333;
+}
+
 .dialog-overlay {
   position: fixed;
   top: 0;
@@ -249,24 +285,25 @@ input.invalid {
 .dialog-buttons {
   margin-top: 1rem;
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
+  gap: 1rem;
 }
 
 .dialog-buttons button {
   padding: 0.5rem 1rem;
   border: none;
-  border-radius: 5px;
-  font-weight: bold;
+  border-radius: 4px;
   cursor: pointer;
+  font-weight: 500;
 }
 
 .dialog-buttons .yes {
-  background-color: #e94e4e;
+  background: #dc3545;
   color: white;
 }
 
 .dialog-buttons .no {
-  background-color: #ccc;
-  color: black;
+  background: #6c757d;
+  color: white;
 }
 

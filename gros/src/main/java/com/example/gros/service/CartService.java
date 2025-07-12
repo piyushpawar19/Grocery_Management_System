@@ -25,14 +25,21 @@ public class CartService {
 
     @Transactional
     public void addToCart(User user, CartItemRequest request) {
+        System.out.println("CartService: Adding to cart - user: " + user.getCustomerName() + ", productId: " + request.getProductId() + ", quantity: " + request.getQuantity());
+        
         Product product = productRepo.findById(request.getProductId())
                 .orElseThrow(() -> new IllegalArgumentException("Product not found"));
+        
+        System.out.println("CartService: Product found - " + product.getProductName());
+        
         CartItem item = cartItemRepo.findByUserAndProduct_ProductId(user, product.getProductId())
                 .orElse(new CartItem());
         item.setUser(user);
         item.setProduct(product);
         item.setQuantity(request.getQuantity());
         cartItemRepo.save(item);
+        
+        System.out.println("CartService: Cart item saved successfully");
     }
 
     @Transactional

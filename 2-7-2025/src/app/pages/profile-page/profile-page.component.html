@@ -76,6 +76,7 @@
         [class.invalid]="showError('contactNumber')"
         [disabled]="!isEditMode || loading"
         (blur)="onBlur('contactNumber')"
+        (input)="enforcePhoneMaxLength()"
       />
       <div class="error" *ngIf="showError('contactNumber')">
         {{ getErrorMsg("contactNumber") }}
@@ -135,6 +136,15 @@
       <b>{{ profileForm.get("email")?.value }}</b>
     </p>
     <button (click)="closeDialog()">OK</button>
+  </div>
+</div>
+
+<!-- Error Dialog -->
+<div class="modal-backdrop" *ngIf="showErrorDialog">
+  <div class="modal error-modal">
+    <h3>Update Failed</h3>
+    <p>{{ errorDialogMessage }}</p>
+    <button (click)="closeErrorDialog()">OK</button>
   </div>
 </div>
 

@@ -43,6 +43,60 @@ public class UserController {
         user.setPassword(null); // Hide password
         return ResponseEntity.ok(user);
     }
+
+    @PostMapping("/admin/login")
+    public ResponseEntity<?> adminLogin(@Valid @RequestBody LoginRequest request) {
+        try {
+            System.out.println("Admin login attempt for email: " + request.getEmail());
+            
+            User user = authService.login(request);
+            
+            System.out.println("User found: " + user.getCustomerName() + ", Role: " + user.getUserRole());
+            
+            // Allow any user to login through admin endpoint
+            // No role check required - accessible for all users
+            
+            user.setPassword(null); // Hide password
+            return ResponseEntity.ok(user);
+        } catch (IllegalArgumentException e) {
+            System.out.println("Login failed: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(Map.of("success", false, "message", "Invalid email or password"));
+        } catch (Exception e) {
+            System.out.println("Unexpected error: " + e.getMessage());
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(Map.of("success", false, "message", "Login failed. Please try again."));
+        }
+    }
+
+    @GetMapping("/test/admin")
+    public ResponseEntity<?> testAdminUser() {
+        try {
+            System.out.println("Testing admin user existence...");
+            Optional<User> adminUser = userService.findByEmail("admin@grocery.com");
+            if (adminUser.isPresent()) {
+                User user = adminUser.get();
+                System.out.println("Admin user found: " + user.getCustomerName() + ", Role: " + user.getUserRole());
+                return ResponseEntity.ok(Map.of(
+                    "success", true,
+                    "message", "Admin user found",
+                    "email", user.getEmail(),
+                    "role", user.getUserRole(),
+                    "name", user.getCustomerName()
+                ));
+            } else {
+                System.out.println("Admin user not found in database");
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Map.of("success", false, "message", "Admin user not found"));
+            }
+        } catch (Exception e) {
+            System.out.println("Error checking admin user: " + e.getMessage());
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(Map.of("success", false, "message", "Error checking admin user: " + e.getMessage()));
+        }
+    }
     
     @PostMapping("/logout")
     public ResponseEntity<ApiResponse> logout(@RequestParam String email) {

@@ -20,9 +20,11 @@ export class ChangePasswordComponent implements OnInit {
   pwdForm!: FormGroup;
   submitted = false;
   showDialog = false;
+  showErrorDialog = false;
+  errorDialogMessage = '';
 
-  // Must be 8+ chars, uppercase, lowercase, number, symbol
-  private pwdPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/;
+  // Password validation pattern (same as registration)
+  private passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/;
 
   constructor(
     private fb: FormBuilder, 
@@ -34,8 +36,15 @@ export class ChangePasswordComponent implements OnInit {
   ngOnInit(): void {
     this.pwdForm = this.fb.group(
       {
-        oldPassword: ['', [Validators.required, Validators.minLength(6)]],
-        newPassword: ['', [Validators.required, Validators.minLength(6)]],
+        oldPassword: ['', [Validators.required]],
+        newPassword: [
+          '', 
+          [
+            Validators.required,
+            Validators.minLength(8),
+            Validators.pattern(this.passwordPattern)
+          ]
+        ],
         confirmPassword: ['', Validators.required]
       },
       { validators: this.passwordsMatchValidator }
@@ -78,11 +87,11 @@ export class ChangePasswordComponent implements OnInit {
     if (errs['required']) {
       return 'This field is required.';
     }
-    if (errs['minlength']) {
-      return `Minimum length is ${errs['minlength'].requiredLength} characters.`;
+    if (errs['minlength'] && field === 'newPassword') {
+      return `Password must be at least ${errs['minlength'].requiredLength} characters.`;
     }
-    if (field === 'newPassword' && errs['pattern']) {
-      return 'Password must be 8+ chars with uppercase, lowercase, number & symbol.';
+    if (errs['pattern'] && field === 'newPassword') {
+      return 'Password must include uppercase, lowercase, number & symbol.';
     }
     if (field === 'confirmPassword' && this.pwdForm.hasError('mismatch')) {
       return 'Passwords do not match.';
@@ -95,7 +104,8 @@ export class ChangePasswordComponent implements OnInit {
       (this.f['newPassword'].touched || this.submitted) &&
       this.pwdForm.hasError('mismatch') &&
       !this.f['newPassword'].hasError('required') &&
-      !this.f['newPassword'].hasError('minlength')
+      !this.f['newPassword'].hasError('minlength') &&
+      !this.f['newPassword'].hasError('pattern')
     );
   }
 
@@ -109,31 +119,50 @@ export class ChangePasswordComponent implements OnInit {
     // Check if customerId is available
     const customerId = localStorage.getItem('customerId');
     if (!customerId) {
-      alert('Customer ID not found. Please login again.');
-      this.router.navigate(['/user-login']);
+      this.showErrorDialogWithMessage('Customer ID not found. Please login again.');
+      return;
+    }
+    
+    // Check if old password and new password are the same
+    const oldPassword = this.f['oldPassword'].value;
+    const newPassword = this.f['newPassword'].value;
+    
+    if (oldPassword === newPassword) {
+      this.showErrorDialogWithMessage('New password must be different from the old password.');
       return;
     }
     
     const payload = {
-      oldPassword: this.f['oldPassword'].value,
-      newPassword: this.f['newPassword'].value,
+      oldPassword: oldPassword,
+      newPassword: newPassword,
       confirmPassword: this.f['confirmPassword'].value
     };
+    
     this.changePasswordService.changePassword(payload).subscribe({
       next: (res) => {
         this.showDialog = true;
       },
       error: (err: HttpErrorResponse) => {
-        if (err.status === 401) {
-          alert('Session expired. Please log in again.');
-          this.router.navigate(['/user-login']);
+        let errorMessage = 'Password change failed. Please try again.';
+        
+        if (err.error?.message) {
+          errorMessage = err.error.message;
+        } else if (err.status === 401) {
+          errorMessage = 'Session expired. Please log in again.';
         } else if (err.status === 400) {
-          alert('Old password is incorrect or new password is invalid.');
-        } else {
-          alert('Password change failed. Please try again.');
+          errorMessage = 'Old password is incorrect or new password is invalid.';
+        } else if (err.status === 500) {
+          errorMessage = 'Server error. Please try again later.';
         }
+        
+        this.showErrorDialogWithMessage(errorMessage);
       }
     });
+  }
+
+  showErrorDialogWithMessage(message: string): void {
+    this.errorDialogMessage = message;
+    this.showErrorDialog = true;
   }
 
   closeDialog(): void {
@@ -143,6 +172,11 @@ export class ChangePasswordComponent implements OnInit {
     localStorage.removeItem('password');
     localStorage.removeItem('customerId');
     this.router.navigate(['/login-selection']);
+  }
+
+  closeErrorDialog(): void {
+    this.showErrorDialog = false;
+    this.errorDialogMessage = '';
   }
 }
 

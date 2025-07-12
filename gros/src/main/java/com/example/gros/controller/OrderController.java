@@ -48,6 +48,25 @@ public class OrderController {
         }
     }
 
+    @PostMapping("/place-order")
+    public ResponseEntity<?> placeOrderWithCustomerId(@RequestParam Integer customerId, @RequestBody Map<String, Object> paymentDetails) {
+        // Find user by customerId
+        User user = userService.findById(customerId)
+                .orElseThrow(() -> new IllegalArgumentException("User with customerId " + customerId + " not found"));
+        
+        // Place the order
+        Order savedOrder = orderService.placeOrder(user);
+
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(Map.of(
+                    "success", true,
+                    "message", "Order placed successfully",
+                    "orderId", savedOrder.getId(),
+                    "paymentDetails", paymentDetails
+                ));
+    }
+
     @GetMapping
     public ResponseEntity<?> getOrders(@RequestParam(required = false) String email) {
         try {

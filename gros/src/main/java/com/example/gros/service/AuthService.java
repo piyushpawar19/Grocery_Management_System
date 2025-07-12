@@ -23,11 +23,25 @@ public class AuthService {
 
     @Transactional
     public User login(LoginRequest request) {
+        System.out.println("AuthService: Attempting login for email: " + request.getEmail());
+        
         User user = userRepository.findByEmail(request.getEmail())
-                .orElseThrow(() -> new IllegalArgumentException("Invalid email or password"));
+                .orElseThrow(() -> {
+                    System.out.println("AuthService: User not found for email: " + request.getEmail());
+                    return new IllegalArgumentException("Invalid email or password");
+                });
+        
+        System.out.println("AuthService: User found: " + user.getCustomerName());
+        System.out.println("AuthService: Stored password hash: " + user.getPassword());
+        System.out.println("AuthService: Provided password: " + request.getPassword());
+        
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+            System.out.println("AuthService: Password mismatch");
             throw new IllegalArgumentException("Invalid email or password");
         }
+        
+        System.out.println("AuthService: Password verified successfully");
+        
         // Update login tracking
         LoginTracking tracking = new LoginTracking();
         tracking.setUser(user);

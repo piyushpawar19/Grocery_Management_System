@@ -103,6 +103,9 @@ export class UserDashboardComponent implements OnInit {
       return; // Don't add if out of stock
     }
 
+    console.log('Adding product to cart:', product.productId);
+    console.log('Customer ID from localStorage:', localStorage.getItem('customerId'));
+
     this.addToCartService.addToCart(product.productId).subscribe({
       next: (response) => {
         // Mark this product as added to cart
@@ -111,7 +114,6 @@ export class UserDashboardComponent implements OnInit {
       },
       error: (error) => {
         console.error('Error adding product to cart:', error);
-        // You can show an error message to the user here
       }
     });
   }

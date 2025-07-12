@@ -6,7 +6,7 @@
     >
   </div>
   <!-- <input type="text" placeholder="Search groceries..." /> -->
-  
+
   <!-- <div class="search-container">
       <input type="text" placeholder="Search groceries..." />
       <button type="submit">
@@ -31,17 +31,19 @@
     />
     <button type="submit" [disabled]="loginForm.invalid">Login</button>
   </form>
-  <a
-    routerLink="/register"
-    style="display: block; margin-top: 1rem; color: #437057; text-align: center"
-    >If not registered</a
-  >
+
+  <div class="signup-section">
+    <p class="signup-text">Don't have an account?</p>
+    <button class="btn signup" routerLink="/register">SIGN UP</button>
+  </div>
+
   <!-- <a href="#">Forgot Password?</a> -->
 </div>
 
-<app-dialog 
-  [isVisible]="showDialog" 
-  [title]="dialogTitle" 
+<app-dialog
+  [isVisible]="showDialog"
+  [title]="dialogTitle"
   [message]="dialogMessage"
-  (onClose)="onDialogClose()">
+  (onClose)="onDialogClose()"
+>
 </app-dialog>

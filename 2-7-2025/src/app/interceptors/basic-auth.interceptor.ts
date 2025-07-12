@@ -28,6 +28,7 @@ export class BasicAuthInterceptor implements HttpInterceptor {
       '/api/users/me/',  // Profile endpoints with customerId
       '/api/users/register',
       '/api/users/login',
+      '/api/users/admin/login',  // Admin login endpoint
       '/api/products',
       '/password',  // Password change endpoint
       '/api/cart'   // Cart endpoints

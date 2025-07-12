@@ -28,12 +28,17 @@ export class ProfileComponent implements OnInit {
   profileForm!: FormGroup;
   isEditMode = false;
   showUpdateDialog = false;
+  showErrorDialog = false;
   showLogoutConfirm = false;
   submitted = false;
   loading = false;
   errorMsg = '';
   updateErrorMsg = '';
+  errorDialogMessage = '';
   touchedFields: { [key: string]: boolean } = {};
+
+  // Password validation pattern (same as registration)
+  private passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/;
 
   constructor(
     private fb: FormBuilder,
@@ -50,20 +55,92 @@ export class ProfileComponent implements OnInit {
         [
           Validators.required,
           Validators.maxLength(30),
-          Validators.pattern(/^[A-Za-z ]+$/)
+          this.alphabetsOnlyValidator
         ]
       ],
       address: [{ value: '', disabled: true }, [Validators.required]],
       contactNumber: [
         { value: '', disabled: true },
-        [Validators.required, Validators.pattern(/^\d{10}$/)]
+        [Validators.required, this.strictPhoneValidator]
       ],
       email: [
         { value: '', disabled: true },
-        [Validators.required, customEmailValidator]
+        [Validators.required, this.strictEmailValidator]
       ]
     });
     this.fetchProfile();
+  }
+
+  // Strict name validator: only alphabets and spaces (same as registration)
+  private alphabetsOnlyValidator(control: AbstractControl): ValidationErrors | null {
+    const value = control.value || '';
+    if (!value) return null;
+    const alphabetPattern = /^[A-Za-z\s]+$/;
+    return alphabetPattern.test(value) ? null : { alphabetsOnly: true };
+  }
+
+  // Strict email validator (same as registration)
+  private strictEmailValidator(control: AbstractControl): ValidationErrors | null {
+    const value = control.value || '';
+    if (!value) return null;
+
+    // Check if email starts with a number
+    if (/^[0-9]/.test(value)) {
+      return { emailStartsWithNumber: true };
+    }
+
+    // Check for exactly one @ symbol
+    const atCount = (value.match(/@/g) || []).length;
+    if (atCount !== 1) {
+      return { invalidAtSymbol: true };
+    }
+
+    // Check for multiple consecutive dots or multiple domains
+    if (value.includes('..') || /\..*\..*\./.test(value)) {
+      return { multipleDots: true };
+    }
+
+    // Check for multiple domain extensions (e.g., .com.com, .com.in, .com.anything)
+    const afterAtPart = value.split('@')[1];
+    if (afterAtPart) {
+      // Count dots in the domain part
+      const dotCount = (afterAtPart.match(/\./g) || []).length;
+      // If more than one dot, check if it's a valid subdomain structure
+      if (dotCount > 1) {
+        // Pattern to detect multiple top-level domains like .com.com, .in.org, etc.
+        const multipleDomainsPattern = /\.(com|org|net|edu|gov|mil|int|co|in|uk|de|fr|jp|au|ca|us|info|biz|name|museum)\.(com|org|net|edu|gov|mil|int|co|in|uk|de|fr|jp|au|ca|us|info|biz|name|museum|[a-zA-Z]{2,})/i;
+        if (multipleDomainsPattern.test(afterAtPart)) {
+          return { multipleDomainExtensions: true };
+        }
+      }
+    }
+
+    // Basic email structure validation
+    const emailPattern = /^[a-zA-Z][a-zA-Z0-9._%+-]*@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    return emailPattern.test(value) ? null : { invalidEmailFormat: true };
+  }
+
+  // Strict phone validator: exactly 10 digits, numbers only, must start with 6-9 (same as registration)
+  private strictPhoneValidator(control: AbstractControl): ValidationErrors | null {
+    const value = control.value || '';
+    if (!value) return null;
+    
+    // Check if contains only digits
+    if (!/^\d+$/.test(value)) {
+      return { numbersOnly: true };
+    }
+    
+    // Check if exactly 10 digits
+    if (value.length !== 10) {
+      return { exactlyTenDigits: true };
+    }
+    
+    // Check if starts with 6, 7, 8, or 9
+    if (!/^[6-9]/.test(value)) {
+      return { mustStartWith6789: true };
+    }
+    
+    return null;
   }
 
   goBack(): void {
@@ -128,6 +205,21 @@ export class ProfileComponent implements OnInit {
     return (this.touchedFields[field] || this.submitted) && this.isInvalid(field);
   }
 
+  // Enforce phone to accept only numbers and max 10 digits
+  enforcePhoneMaxLength() {
+    const phoneControl = this.profileForm.get('contactNumber');
+    if (phoneControl) {
+      let val = phoneControl.value || '';
+      // Remove any non-digit characters
+      val = val.replace(/\D/g, '');
+      // Limit to 10 digits
+      if (val.length > 10) {
+        val = val.slice(0, 10);
+      }
+      phoneControl.setValue(val, { emitEvent: false });
+    }
+  }
+
   getErrorMsg(field: string): string {
     const control = this.f[field];
     const errs = control.errors || {};
@@ -137,30 +229,43 @@ export class ProfileComponent implements OnInit {
       if (field === 'contactNumber') return 'Mobile number is required.';
       return `${this.label(field)} is required.`;
     }
-    if (field === 'customerName' && errs['maxlength']) {
-      return `Name cannot exceed ${errs['maxlength'].requiredLength} characters.`;
+    
+    if (field === 'customerName') {
+      if (errs['maxlength']) {
+        return `Name cannot exceed ${errs['maxlength'].requiredLength} characters.`;
+      }
+      if (errs['alphabetsOnly']) {
+        return 'Name can only contain alphabets and spaces (A-Z, a-z, space).';
+      }
     }
-    if (field === 'customerName' && errs['pattern']) {
-      return `Name can only contain letters and spaces.`;
+    
+    if (field === 'email') {
+      if (errs['emailStartsWithNumber']) {
+        return 'Email address cannot start with a number.';
+      }
+      if (errs['invalidAtSymbol']) {
+        return 'Email must contain exactly one @ symbol.';
+      }
+      if (errs['multipleDots']) {
+        return 'Email cannot contain consecutive dots or multiple domains.';
+      }
+      if (errs['multipleDomainExtensions']) {
+        return 'Email cannot contain multiple domain extensions (e.g., .com.com, .com.in).';
+      }
+      if (errs['invalidEmailFormat']) {
+        return 'Please enter a valid email address.';
+      }
     }
-    if (field === 'email' && errs['customEmail']) {
-      return 'Please enter a valid email address (e.g. john.doe@example.com).';
-    }
-    if (errs['email']) {
-      return `Please enter a valid email address.`;
-    }
+    
     if (field === 'contactNumber') {
-      if (errs['pattern']) {
-        if (control.value && control.value.length > 10) {
-          return 'Mobile number cannot exceed 10 digits.';
-        }
+      if (errs['numbersOnly']) {
+        return 'Mobile number can only contain numbers.';
+      }
+      if (errs['exactlyTenDigits']) {
         return 'Mobile number must be exactly 10 digits.';
       }
-      if (control.value && control.value.length > 10) {
-        return 'Mobile number cannot exceed 10 digits.';
-      }
-      if (control.value && control.value.length < 10) {
-        return 'Mobile number must be exactly 10 digits.';
+      if (errs['mustStartWith6789']) {
+        return 'Mobile number must start with 6, 7, 8, or 9.';
       }
     }
     return '';
@@ -187,6 +292,7 @@ export class ProfileComponent implements OnInit {
   save(): void {
     this.submitted = true;
     this.updateErrorMsg = '';
+    
     if (this.profileForm.invalid) {
       this.profileForm.markAllAsTouched();
       return;
@@ -195,7 +301,7 @@ export class ProfileComponent implements OnInit {
     // Check if customerId is available
     const customerId = localStorage.getItem('customerId');
     if (!customerId) {
-      this.updateErrorMsg = 'Customer ID not found. Please login again.';
+      this.showErrorDialogWithMessage('Customer ID not found. Please login again.');
       return;
     }
     
@@ -229,11 +335,19 @@ export class ProfileComponent implements OnInit {
         this.submitted = false;
       },
       error: (err: HttpErrorResponse) => {
+        let errorMessage = 'Unable to update profile. Please try again.';
+        
         if (err.error?.message) {
-          this.updateErrorMsg = err.error.message;
-        } else {
-          this.updateErrorMsg = 'Unable to update, please try again.';
+          errorMessage = err.error.message;
+        } else if (err.status === 400) {
+          errorMessage = 'Invalid data provided. Please check your input.';
+        } else if (err.status === 401) {
+          errorMessage = 'Session expired. Please login again.';
+        } else if (err.status === 500) {
+          errorMessage = 'Server error. Please try again later.';
         }
+        
+        this.showErrorDialogWithMessage(errorMessage);
         this.loading = false;
       }
     });
@@ -246,15 +360,25 @@ export class ProfileComponent implements OnInit {
     Object.keys(this.f).forEach((key) => this.f[key].disable());
   }
 
+  showErrorDialogWithMessage(message: string): void {
+    this.errorDialogMessage = message;
+    this.showErrorDialog = true;
+  }
+
   closeDialog(): void {
     this.showUpdateDialog = false;
   }
 
+  closeErrorDialog(): void {
+    this.showErrorDialog = false;
+    this.errorDialogMessage = '';
+  }
+
   confirmLogout() {
-    this.showLogoutConfirm = false;
     localStorage.removeItem('username');
     localStorage.removeItem('password');
-    this.router.navigateByUrl('/user-login');
+    localStorage.removeItem('customerId');
+    this.router.navigate(['/login-selection']);
   }
 
   cancelLogout() {

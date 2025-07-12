@@ -11,6 +11,6 @@ export class AdminLoginService {
   constructor(private http: HttpClient) {}
 
   login(data: any): Observable<any> {
-    return this.http.post(`${this.baseUrl}/login`, data);
+    return this.http.post(`${this.baseUrl}/admin/login`, data);
   }
 }
