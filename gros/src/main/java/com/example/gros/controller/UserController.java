@@ -78,12 +78,14 @@ public class UserController {
             if (adminUser.isPresent()) {
                 User user = adminUser.get();
                 System.out.println("Admin user found: " + user.getCustomerName() + ", Role: " + user.getUserRole());
+                System.out.println("Admin password hash: " + user.getPassword());
                 return ResponseEntity.ok(Map.of(
                     "success", true,
                     "message", "Admin user found",
                     "email", user.getEmail(),
                     "role", user.getUserRole(),
-                    "name", user.getCustomerName()
+                    "name", user.getCustomerName(),
+                    "passwordHash", user.getPassword()
                 ));
             } else {
                 System.out.println("Admin user not found in database");

@@ -30,6 +30,9 @@ public class Product {
     @Column(name = "product_description")
     private String productDescription;
 
+    @Column(name = "image_url")
+    private String imageUrl;
+
     @Column
     private String reserved = "NO";
 
@@ -48,6 +51,8 @@ public class Product {
     public void setQuantity(Integer quantity) { this.quantity = quantity; }
     public String getProductDescription() { return productDescription; }
     public void setProductDescription(String productDescription) { this.productDescription = productDescription; }
+    public String getImageUrl() { return imageUrl; }
+    public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }
     public String getReserved() { return reserved; }
     public void setReserved(String reserved) { this.reserved = reserved; }
     public User getCustomer() { return customer; }

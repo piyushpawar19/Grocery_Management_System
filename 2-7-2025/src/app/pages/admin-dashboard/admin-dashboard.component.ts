@@ -1,54 +1,61 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
+import { AuthService } from '../../services/auth.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-admin-dashboard',
   templateUrl: './admin-dashboard.component.html',
   styleUrls: ['./admin-dashboard.component.css']
 })
-export class AdminDashboardComponent {
+export class AdminDashboardComponent implements OnInit, OnDestroy {
   searchText: string = '';
+  showLogoutConfirm = false;
+  private logoutSubscription?: Subscription;
 
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router,
+    private authService: AuthService
+  ) {}
+
+  ngOnInit() {
+    // Subscribe to logout confirmation requests
+    this.logoutSubscription = this.authService.logoutConfirmation$.subscribe(
+      (showDialog) => {
+        this.showLogoutConfirm = showDialog;
+      }
+    );
+  }
+
+  ngOnDestroy() {
+    // Clean up subscription
+    if (this.logoutSubscription) {
+      this.logoutSubscription.unsubscribe();
+    }
+  }
 
   logout() {
-    // Implement logout logic
-    localStorage.removeItem('username');
-    localStorage.removeItem('password');
-    localStorage.removeItem('customerId');
-    localStorage.removeItem('userRole');
-    localStorage.removeItem('isAdmin');
-    this.router.navigate(['/']);
+    this.authService.requestLogout();
   }
 
   profile() {
     // Navigate to admin profile page
     this.router.navigate(['/admin-dashboard/profile']);
   }
+
   goTo(route: string) {
     this.router.navigate(["/"]);
   }
 
-  showLogoutConfirm = false;
+  confirmLogout() {
+    this.showLogoutConfirm = false;
+    this.authService.confirmLogout();
+  }
 
-// Then, add these two methods in the class:
-
-confirmLogout() {
-  this.showLogoutConfirm = false;
-  // Clear role information
-  localStorage.removeItem('username');
-  localStorage.removeItem('password');
-  localStorage.removeItem('customerId');
-  localStorage.removeItem('userRole');
-  localStorage.removeItem('isAdmin');
-  // Navigate to login/root/home page
-  window.location.href = '/';
-}
-
-cancelLogout() {
-  this.showLogoutConfirm = false;
-}
-
+  cancelLogout() {
+    this.showLogoutConfirm = false;
+    this.authService.cancelLogout();
+  }
 }
 
 

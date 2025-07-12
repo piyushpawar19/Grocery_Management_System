@@ -6,7 +6,7 @@
   <div class="links">
     <a routerLink="/add-to-cart">Cart</a>
     <a routerLink="/user-dashboard/profile">Profile</a>
-    <a routerLink="/">Logout</a>
+    <a (click)="logout()" style="cursor: pointer">Logout</a>
   </div>
 </nav> -->
 
@@ -31,7 +31,7 @@
   <div class="links">
     <a routerLink="/add-to-cart">Cart</a>
     <a routerLink="/user-dashboard/profile">Profile</a>
-    <a routerLink="/">Logout</a>
+    <a (click)="logout()" style="cursor: pointer">Logout</a>
   </div>
 </nav>
 <section class="hero">
@@ -90,3 +90,14 @@
     </div>
   </div>
 </section>
+
+<!-- Logout Confirmation Dialog -->
+<app-confirmation-dialog
+  [isVisible]="showLogoutConfirm"
+  title="Confirm Logout"
+  message="Are you sure you want to logout? You will be redirected to the home page."
+  confirmText="Yes, Logout"
+  cancelText="Cancel"
+  (confirm)="confirmLogout()"
+  (cancel)="cancelLogout()">
+</app-confirmation-dialog>

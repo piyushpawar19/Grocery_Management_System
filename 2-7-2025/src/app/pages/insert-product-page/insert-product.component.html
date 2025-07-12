@@ -18,7 +18,7 @@
     <!-- <a routerLink="/register">Register</a> -->
     <a routerLink="/user-dashboard/profile">Profile</a>
 
-    <a (click)="showLogoutConfirm = true" style="cursor: pointer">Logout</a>
+    <a (click)="logout()" style="cursor: pointer">Logout</a>
   </div>
 </nav>
 
@@ -85,13 +85,15 @@
   </div>
 </div>
 
+
+
 <!-- Logout Confirmation Dialog -->
-<div class="dialog-overlay" *ngIf="showLogoutConfirm">
-  <div class="dialog-box">
-    <p>Are you sure you want to logout?</p>
-    <div class="dialog-buttons">
-      <button (click)="confirmLogout()" class="yes">Yes</button>
-      <button (click)="cancelLogout()" class="no">No</button>
-    </div>
-  </div>
-</div>
+<app-confirmation-dialog
+  [isVisible]="showLogoutConfirm"
+  title="Confirm Logout"
+  message="Are you sure you want to logout? You will be redirected to the home page."
+  confirmText="Yes, Logout"
+  cancelText="Cancel"
+  (confirm)="confirmLogout()"
+  (cancel)="cancelLogout()">
+</app-confirmation-dialog>

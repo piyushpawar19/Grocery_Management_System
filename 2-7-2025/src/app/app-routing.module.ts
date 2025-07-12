@@ -17,25 +17,32 @@ import { UpdateProductComponent } from './pages/update-product/update-product.co
 import { ViewCustomerComponent } from './pages/view-customer/view-customer.component';
 import { ProfileComponent } from './pages/profile-page/profile-page.component';
 import { ChangePasswordComponent } from './pages/change-password/change-password.component';
+import { AdminOrderHistoryComponent } from './pages/admin-order-history/admin-order-history.component';
+import { AuthGuard } from './guards/auth.guard';
 
 const routes: Routes = [
   { path: 'register', component: RegisterComponent },
   { path: 'login-selection', component: LoginSelectionComponent },
-  { path: 'user-login', component:  LoginComponent},
+  { path: 'user-login', component: LoginComponent},
   { path: 'admin-login', component: AdminLoginComponent },
   
-  { path: 'user-dashboard', component: UserDashboardComponent },  
-  { path: 'user-dashboard/profile', component: ProfileComponent },  
-  { path: 'user-dashboard/profile/change-password', component: ChangePasswordComponent },  
+  // Protected user routes
+  { path: 'user-dashboard', component: UserDashboardComponent, canActivate: [AuthGuard] },  
+  { path: 'user-dashboard/profile', component: ProfileComponent, canActivate: [AuthGuard] },  
+  { path: 'user-dashboard/profile/change-password', component: ChangePasswordComponent, canActivate: [AuthGuard] },  
   { path: 'product/:id', component: ProductPageComponent },  
-  { path: 'add-to-cart', component: AddToCartComponent },  
-  { path: 'buy-now', component: BuyNowComponent },  
-  { path: 'invoice/:orderId', component: InvoiceComponent },
-  { path: 'admin-dashboard', component: AdminDashboardComponent },
-  { path: 'admin/insert-product', component: InsertProductComponent },
-  { path: 'admin/update-product/:id', component: UpdateProductComponent },
-  { path: 'admin/view-product', component: ViewProductComponent },
-  { path: 'admin/view-customer', component: ViewCustomerComponent },
+  { path: 'add-to-cart', component: AddToCartComponent, canActivate: [AuthGuard] },  
+  { path: 'buy-now', component: BuyNowComponent, canActivate: [AuthGuard] },  
+  { path: 'invoice/:orderId', component: InvoiceComponent, canActivate: [AuthGuard] },
+  
+  // Protected admin routes
+  { path: 'admin-dashboard', component: AdminDashboardComponent, canActivate: [AuthGuard], data: { requiresAdmin: true } },
+  { path: 'admin/insert-product', component: InsertProductComponent, canActivate: [AuthGuard], data: { requiresAdmin: true } },
+  { path: 'admin/update-product/:id', component: UpdateProductComponent, canActivate: [AuthGuard], data: { requiresAdmin: true } },
+  { path: 'admin/view-product', component: ViewProductComponent, canActivate: [AuthGuard], data: { requiresAdmin: true } },
+  { path: 'admin/view-customer', component: ViewCustomerComponent, canActivate: [AuthGuard], data: { requiresAdmin: true } },
+  { path: 'admin-dashboard/order-history', component: AdminOrderHistoryComponent, canActivate: [AuthGuard], data: { requiresAdmin: true } },
+  
   { path: '', component: HomeComponent },
   // future routes: user-login, change-password
   { path: '**', redirectTo: '' ,pathMatch:'full'}
