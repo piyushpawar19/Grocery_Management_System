@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { AdminLoginService } from '../../services/adminLogin_service';
+import { AuthService } from '../../services/auth.service';
 @Component({ selector: 'app-admin-login', templateUrl: './admin-login.component.html', styleUrls: ['./admin-login.component.css'] })
 export class AdminLoginComponent implements OnInit {
   loginForm!: FormGroup;
@@ -11,7 +12,14 @@ export class AdminLoginComponent implements OnInit {
   dialogTitle: string = 'Login Failed';
   dialogMessage: string = 'Login failed, check your credentials';
   
-  constructor(private fb: FormBuilder, private router:Router, private location: Location, private http: HttpClient, private AdminLoginService: AdminLoginService) {}
+  constructor(
+    private fb: FormBuilder, 
+    private router: Router, 
+    private location: Location, 
+    private http: HttpClient, 
+    private AdminLoginService: AdminLoginService,
+    private authService: AuthService
+  ) {}
   ngOnInit() {
     // Clear any stored authentication credentials to prevent Basic auth conflicts
     localStorage.removeItem('username');
@@ -26,13 +34,14 @@ export class AdminLoginComponent implements OnInit {
     if (this.loginForm.valid) {
       this.AdminLoginService.login(this.loginForm.value).subscribe({
         next: (res) => {
-          // Store customerId in localStorage for later use (e.g., change password)
-          if (res && res.customerId) {
-            localStorage.setItem('customerId', res.customerId.toString());
-          }
-          // Store admin role information for role-based navigation
+          // Store login data using AuthService
+          this.authService.setLoginData(res);
+          
+          // Set admin-specific data
           localStorage.setItem('userRole', 'ADMIN');
           localStorage.setItem('isAdmin', 'true');
+          
+          console.log('Admin login successful:', res);
           this.router.navigate(['/admin-dashboard']);
         },
         error: (err: HttpErrorResponse) => {

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -8,21 +8,26 @@ import {
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { InsertProductService } from '../../services/insert_product_service';
+import { AuthService } from '../../services/auth.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-insert-product',
   templateUrl: './insert-product.component.html',
   styleUrls: ['./insert-product.component.css']
 })
-export class InsertProductComponent implements OnInit {
+export class InsertProductComponent implements OnInit, OnDestroy {
   productForm!: FormGroup;
   showDialog = false;
+  showLogoutConfirm = false;
+  private logoutSubscription?: Subscription;
 
   constructor(
     private fb: FormBuilder, 
     private router: Router, 
     private location: Location,
-    private insertProductService: InsertProductService
+    private insertProductService: InsertProductService,
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
@@ -33,6 +38,20 @@ export class InsertProductComponent implements OnInit {
       imageUrl: ['', Validators.required],
       price: [0, [Validators.required, Validators.min(0)]]
     });
+
+    // Subscribe to logout confirmation requests
+    this.logoutSubscription = this.authService.logoutConfirmation$.subscribe(
+      (showDialog) => {
+        this.showLogoutConfirm = showDialog;
+      }
+    );
+  }
+
+  ngOnDestroy() {
+    // Clean up subscription
+    if (this.logoutSubscription) {
+      this.logoutSubscription.unsubscribe();
+    }
   }
 
   get f(): { [key: string]: AbstractControl } {
@@ -94,18 +113,17 @@ export class InsertProductComponent implements OnInit {
   }
 
   logout(): void {
-    this.router.navigate(['/login-selection']);
+    this.authService.requestLogout();
   }
-
-  showLogoutConfirm = false;
 
   confirmLogout() {
     this.showLogoutConfirm = false;
-    window.location.href = '/';
+    this.authService.confirmLogout();
   }
 
   cancelLogout() {
     this.showLogoutConfirm = false;
+    this.authService.cancelLogout();
   }
 
   goBack() {

@@ -87,6 +87,8 @@ public class OrderController {
                     order.getId(),
                     order.getOrderTime(),
                     order.getTotalAmount(),
+                    order.getUser().getCustomerName(),
+                    order.getUser().getEmail(),
                     itemResponses
                 );
             }).toList();

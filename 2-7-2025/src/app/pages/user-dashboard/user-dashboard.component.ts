@@ -1,15 +1,17 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { GetProductService, Product } from '../../services/get_product_service';
 import { AddToCartService } from '../../services/add-to-cart.service';
 import { ProductSearchService } from '../../services/product-search.service';
+import { AuthService } from '../../services/auth.service';
+import { Subscription } from 'rxjs';
 
 @Component({  
   selector: 'app-user-dashboard',  
   templateUrl: './user-dashboard.component.html',  
   styleUrls: ['./user-dashboard.component.css']
 })
-export class UserDashboardComponent implements OnInit {
+export class UserDashboardComponent implements OnInit, OnDestroy {
   @ViewChild('productsSection') productsSection!: ElementRef;
   
   products: Product[] = [];
@@ -21,16 +23,32 @@ export class UserDashboardComponent implements OnInit {
   isSearching = false;
   searchError = '';
   showNoResults = false;
+  private logoutSubscription?: Subscription;
 
   constructor(
     private router: Router, 
     private getProductService: GetProductService,
     private addToCartService: AddToCartService,
-    private productSearchService: ProductSearchService
+    private productSearchService: ProductSearchService,
+    private authService: AuthService
   ) {}
 
   ngOnInit() {
     this.fetchProducts();
+    
+    // Subscribe to logout confirmation requests
+    this.logoutSubscription = this.authService.logoutConfirmation$.subscribe(
+      (showDialog) => {
+        this.showLogoutConfirm = showDialog;
+      }
+    );
+  }
+
+  ngOnDestroy() {
+    // Clean up subscription
+    if (this.logoutSubscription) {
+      this.logoutSubscription.unsubscribe();
+    }
   }
 
   scrollToProducts() {
@@ -84,18 +102,18 @@ export class UserDashboardComponent implements OnInit {
     this.router.navigate(['/product', id]);
   }
 
+  logout() {
+    this.authService.requestLogout();
+  }
+
   confirmLogout() {
     this.showLogoutConfirm = false;
-    localStorage.removeItem('username');
-    localStorage.removeItem('password');
-    localStorage.removeItem('customerId');
-    localStorage.removeItem('userRole');
-    localStorage.removeItem('isAdmin');
-    this.router.navigateByUrl('/user-login');
+    this.authService.confirmLogout();
   }
 
   cancelLogout() {
     this.showLogoutConfirm = false;
+    this.authService.cancelLogout();
   }
 
   addToCart(product: Product) {
