@@ -70,4 +70,18 @@ export class HomeComponent implements OnInit {
     this.router.navigate(['/login-selection']);
     this.closeDialog();
   }
+
+  getProductImage(product: Product): string {
+    // If product has an imageUrl and it's not empty, use it
+    if (product.imageUrl && product.imageUrl.trim() !== '') {
+      return product.imageUrl;
+    }
+    // Fallback to apple image
+    return '../../../assets/images/apple.jpg';
+  }
+
+  onImageError(event: any): void {
+    // If the image fails to load, set it to the fallback image
+    event.target.src = '../../../assets/images/apple.jpg';
+  }
 }

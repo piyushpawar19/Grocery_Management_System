@@ -170,4 +170,18 @@ export class AddToCartComponent implements OnInit, OnDestroy {
     this.showLogoutConfirm = false;
     this.authService.cancelLogout();
   }
+
+  getProductImage(item: CartItem): string {
+    // If item has an imageUrl and it's not empty, use it
+    if (item.imageUrl && item.imageUrl.trim() !== '') {
+      return item.imageUrl;
+    }
+    // Fallback to apple image
+    return '../../../assets/images/apple.jpg';
+  }
+
+  onImageError(event: any): void {
+    // If the image fails to load, set it to the fallback image
+    event.target.src = '../../../assets/images/apple.jpg';
+  }
 }

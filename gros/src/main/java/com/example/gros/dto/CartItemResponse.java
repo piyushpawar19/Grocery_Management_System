@@ -9,6 +9,7 @@ public class CartItemResponse {
     private int quantity;
     private BigDecimal unitPrice;
     private BigDecimal totalPrice;
+    private String imageUrl;
 
     // Constructors
     public CartItemResponse(Integer productId, String productName, int quantity, BigDecimal unitPrice) {
@@ -17,6 +18,15 @@ public class CartItemResponse {
         this.setQuantity(quantity);
         this.setUnitPrice(unitPrice);
         this.setTotalPrice(unitPrice.multiply(BigDecimal.valueOf(quantity)));
+    }
+
+    public CartItemResponse(Integer productId, String productName, int quantity, BigDecimal unitPrice, String imageUrl) {
+        this.setProductId(productId);
+        this.setProductName(productName);
+        this.setQuantity(quantity);
+        this.setUnitPrice(unitPrice);
+        this.setTotalPrice(unitPrice.multiply(BigDecimal.valueOf(quantity)));
+        this.setImageUrl(imageUrl);
     }
 
 	public Integer getProductId() {
@@ -57,6 +67,14 @@ public class CartItemResponse {
 
 	public void setTotalPrice(BigDecimal totalPrice) {
 		this.totalPrice = totalPrice;
+	}
+
+	public String getImageUrl() {
+		return imageUrl;
+	}
+
+	public void setImageUrl(String imageUrl) {
+		this.imageUrl = imageUrl;
 	}
 
     // Getters and setters

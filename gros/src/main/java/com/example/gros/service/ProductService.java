@@ -2,8 +2,10 @@ package com.example.gros.service;
 
 import com.example.gros.model.Product;
 import com.example.gros.model.CartItem;
+import com.example.gros.model.OrderItem;
 import com.example.gros.repository.ProductRepository;
 import com.example.gros.repository.CartItemRepository;
+import com.example.gros.repository.OrderItemRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.slf4j.Logger;
@@ -16,10 +18,12 @@ public class ProductService {
     private static final Logger logger = LoggerFactory.getLogger(ProductService.class);
     private final ProductRepository productRepository;
     private final CartItemRepository cartItemRepository;
+    private final OrderItemRepository orderItemRepository;
 
-    public ProductService(ProductRepository productRepository, CartItemRepository cartItemRepository) {
+    public ProductService(ProductRepository productRepository, CartItemRepository cartItemRepository, OrderItemRepository orderItemRepository) {
         this.productRepository = productRepository;
         this.cartItemRepository = cartItemRepository;
+        this.orderItemRepository = orderItemRepository;
     }
 
     public List<Product> getAllProducts() {
@@ -92,7 +96,10 @@ public class ProductService {
             // First, delete all cart items for this product
             deleteCartItemsForProduct(productId);
             
-            // Delete the product (this will fail if there are foreign key constraints from orders)
+            // Then, delete all order items for this product
+            deleteOrderItemsForProduct(productId);
+            
+            // Delete the product (this should now succeed)
             productRepository.deleteById(productId);
             logger.info("Product deleted successfully: {}", productId);
             
@@ -122,6 +129,20 @@ public class ProductService {
             }
         } catch (Exception e) {
             logger.error("Error deleting cart items for product ID: {}", productId, e);
+            // Don't throw here, let the main delete operation handle it
+        }
+    }
+
+    private void deleteOrderItemsForProduct(Integer productId) {
+        try {
+            // Find all order items for this product
+            List<OrderItem> orderItems = orderItemRepository.findByProduct_ProductId(productId);
+            if (!orderItems.isEmpty()) {
+                logger.info("Deleting {} order items for product ID: {}", orderItems.size(), productId);
+                orderItemRepository.deleteAll(orderItems);
+            }
+        } catch (Exception e) {
+            logger.error("Error deleting order items for product ID: {}", productId, e);
             // Don't throw here, let the main delete operation handle it
         }
     }

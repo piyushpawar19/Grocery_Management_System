@@ -130,7 +130,7 @@
 .products {
   background-color: #d9e2dd;
   margin-top: -1.6rem;
-  height: 500px;
+  height: auto;
   text-align: center;
   align-items: center;
   height: 1400px;
@@ -170,7 +170,7 @@
 }
 .card img {
   max-width: 100%;
-  height: auto;
+  height: 250px;
   max-width: 250px;
   margin-bottom: 1rem;
   border-radius: 10px;

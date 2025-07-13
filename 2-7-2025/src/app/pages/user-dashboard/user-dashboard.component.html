@@ -59,7 +59,11 @@
 
   <div class="grid">
     <div class="card" *ngFor="let p of filteredProducts">
-      <img src="../../../assets/images/apple.jpg" alt="{{ p.productName }}" />
+      <img
+        [src]="getProductImage(p)"
+        [alt]="p.productName"
+        (error)="onImageError($event)"
+      />
       <h3>{{ p.productName }}</h3>
       <p>{{ p.productDescription }}</p>
       <span class="price">₹{{ p.price }}</span>
@@ -100,5 +104,6 @@
   confirmText="Yes, Logout"
   cancelText="Cancel"
   (confirm)="confirmLogout()"
-  (cancel)="cancelLogout()">
+  (cancel)="cancelLogout()"
+>
 </app-confirmation-dialog>
