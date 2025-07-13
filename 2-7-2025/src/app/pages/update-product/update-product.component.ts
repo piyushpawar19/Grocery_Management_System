@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Location } from '@angular/common';
 import {
@@ -8,6 +8,8 @@ import {
   AbstractControl
 } from '@angular/forms';
 import { UpdateProductService, ProductDto, UpdateProductRequest } from '../../services/update-product-service';
+import { AuthService } from '../../services/auth.service';
+import { Subscription } from 'rxjs';
 
 interface Product {
   id: number; name: string; description: string;
@@ -19,7 +21,7 @@ interface Product {
   templateUrl: './update-product.component.html',
   styleUrls: ['./update-product.component.css']
 })
-export class UpdateProductComponent implements OnInit {
+export class UpdateProductComponent implements OnInit, OnDestroy {
   product!: Product;
   productForm!: FormGroup;
   showDialog = false;
@@ -32,12 +34,17 @@ export class UpdateProductComponent implements OnInit {
   isEditMode = false;
   originalFormData: any = {};
 
+  // For logout confirmation
+  showLogoutConfirm = false;
+  private logoutSubscription?: Subscription;
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private location: Location,
     private fb: FormBuilder,
-    private updateProductService: UpdateProductService
+    private updateProductService: UpdateProductService,
+    private authService: AuthService
   ) {}
 
   ngOnInit() {
@@ -54,6 +61,20 @@ export class UpdateProductComponent implements OnInit {
 
     // Load product data from backend
     this.loadProductData();
+    
+    // Subscribe to logout confirmation requests
+    this.logoutSubscription = this.authService.logoutConfirmation$.subscribe(
+      (showDialog) => {
+        this.showLogoutConfirm = showDialog;
+      }
+    );
+  }
+
+  ngOnDestroy() {
+    // Clean up subscription
+    if (this.logoutSubscription) {
+      this.logoutSubscription.unsubscribe();
+    }
   }
 
   loadProductData(): void {
@@ -226,15 +247,18 @@ export class UpdateProductComponent implements OnInit {
     this.showErrorDialog = false;
   }
 
-  showLogoutConfirm = false;
+  logout() {
+    this.authService.requestLogout();
+  }
 
   confirmLogout() {
     this.showLogoutConfirm = false;
-    window.location.href = '/';
+    this.authService.confirmLogout();
   }
 
   cancelLogout() {
     this.showLogoutConfirm = false;
+    this.authService.cancelLogout();
   }
 
   goBack() {

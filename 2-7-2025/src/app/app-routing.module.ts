@@ -18,6 +18,7 @@ import { ViewCustomerComponent } from './pages/view-customer/view-customer.compo
 import { ProfileComponent } from './pages/profile-page/profile-page.component';
 import { ChangePasswordComponent } from './pages/change-password/change-password.component';
 import { AdminOrderHistoryComponent } from './pages/admin-order-history/admin-order-history.component';
+import { UserOrderHistoryComponent } from './pages/user-order-history/user-order-history.component';
 import { AuthGuard } from './guards/auth.guard';
 
 const routes: Routes = [
@@ -30,6 +31,7 @@ const routes: Routes = [
   { path: 'user-dashboard', component: UserDashboardComponent, canActivate: [AuthGuard] },  
   { path: 'user-dashboard/profile', component: ProfileComponent, canActivate: [AuthGuard] },  
   { path: 'user-dashboard/profile/change-password', component: ChangePasswordComponent, canActivate: [AuthGuard] },  
+  { path: 'user-dashboard/order-history', component: UserOrderHistoryComponent, canActivate: [AuthGuard] },  
   { path: 'product/:id', component: ProductPageComponent },  
   { path: 'add-to-cart', component: AddToCartComponent, canActivate: [AuthGuard] },  
   { path: 'buy-now', component: BuyNowComponent, canActivate: [AuthGuard] },  

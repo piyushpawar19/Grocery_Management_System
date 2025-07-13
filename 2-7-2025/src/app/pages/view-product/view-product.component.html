@@ -16,7 +16,7 @@
 
   <div class="links">
     <a routerLink="/user-dashboard/profile">Profile</a>
-    <a (click)="showLogoutConfirm = true" style="cursor: pointer">Logout</a>
+    <a (click)="logout()" style="cursor: pointer">Logout</a>
   </div>
 </nav>
 
@@ -104,5 +104,16 @@
     <button class="btn update" (click)="closeErrorDialog()">OK</button>
   </div>
 </div>
+
+<!-- Logout Confirmation Dialog -->
+<app-confirmation-dialog
+  [isVisible]="showLogoutConfirm"
+  title="Confirm Logout"
+  message="Are you sure you want to logout? You will be redirected to the home page."
+  confirmText="Yes, Logout"
+  cancelText="Cancel"
+  (confirm)="confirmLogout()"
+  (cancel)="cancelLogout()">
+</app-confirmation-dialog>
 
 

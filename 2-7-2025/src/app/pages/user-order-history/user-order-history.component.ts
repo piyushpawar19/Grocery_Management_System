@@ -1,16 +1,16 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
-import { AdminOrderService } from '../../services/adminOrder_service';
+import { UserOrderService } from '../../services/userOrder.service';
 import { Order } from '../../shared/interfaces/order.interface';
 import { Subscription } from 'rxjs';
 
 @Component({
-  selector: 'app-admin-order-history',
-  templateUrl: './admin-order-history.component.html',
-  styleUrls: ['./admin-order-history.component.css']
+  selector: 'app-user-order-history',
+  templateUrl: './user-order-history.component.html',
+  styleUrls: ['./user-order-history.component.css']
 })
-export class AdminOrderHistoryComponent implements OnInit, OnDestroy {
+export class UserOrderHistoryComponent implements OnInit, OnDestroy {
   orders: Order[] = [];
   filteredOrders: Order[] = [];
   loading = false;
@@ -22,7 +22,7 @@ export class AdminOrderHistoryComponent implements OnInit, OnDestroy {
   constructor(
     private router: Router,
     private authService: AuthService,
-    private adminOrderService: AdminOrderService
+    private userOrderService: UserOrderService
   ) {}
 
   ngOnInit() {
@@ -47,7 +47,15 @@ export class AdminOrderHistoryComponent implements OnInit, OnDestroy {
     this.loading = true;
     this.error = '';
     
-    this.adminOrderService.getAllOrders().subscribe({
+    // Get customer ID using AuthService
+    const customerId = this.authService.getCustomerId();
+    if (!customerId) {
+      this.error = 'User information not found. Please login again.';
+      this.loading = false;
+      return;
+    }
+    
+    this.userOrderService.getUserOrders(customerId).subscribe({
       next: (orders) => {
         this.orders = orders;
         this.filteredOrders = orders;
@@ -70,8 +78,6 @@ export class AdminOrderHistoryComponent implements OnInit, OnDestroy {
     const searchTerm = this.searchQuery.toLowerCase().trim();
     this.filteredOrders = this.orders.filter(order => 
       order.id.toString().includes(searchTerm) ||
-      (order.customerName && order.customerName.toLowerCase().includes(searchTerm)) ||
-      (order.customerEmail && order.customerEmail.toLowerCase().includes(searchTerm)) ||
       order.orderTime.toLowerCase().includes(searchTerm) ||
       order.totalAmount.toString().includes(searchTerm) ||
       order.items.some(item => 
