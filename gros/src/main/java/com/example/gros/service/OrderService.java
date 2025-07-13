@@ -82,4 +82,13 @@ public class OrderService {
     public List<Order> getAllOrders() {
         return orderRepo.findAll();
     }
+
+    public List<Order> getOrdersForUser(Integer customerId) {
+        return orderRepo.findByUser_CustomerId(customerId);
+    }
+
+    public Order getOrderById(Integer orderId) {
+        return orderRepo.findById(orderId)
+                .orElseThrow(() -> new IllegalArgumentException("Order not found with ID: " + orderId));
+    }
 }

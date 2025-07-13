@@ -5,9 +5,31 @@
       Grocery<span>Mart</span>
     </a>
   </div>
+  
+  <div class="search-container">
+    <input 
+      type="text" 
+      placeholder="Search customers..." 
+      [(ngModel)]="searchQuery"
+      (keypress)="onKeyPress($event)"
+    />
+    <button type="submit" (click)="onSearch()">
+      <i class="fa fa-search" style="color: white;"></i>
+    </button>
+    <button 
+      *ngIf="searchQuery" 
+      type="button" 
+      (click)="onClearSearch()" 
+      style="background: none; border: none; color: white; cursor: pointer; margin-left: 5px;"
+      title="Clear search"
+    >
+      ×
+    </button>
+  </div>
+  
   <div class="links">
     <a routerLink="/user-dashboard/profile">Profile</a>
-    <a (click)="showLogoutConfirm = true" style="cursor: pointer">Logout</a>
+    <a (click)="logout()" style="cursor: pointer">Logout</a>
   </div>
 </nav>
 
@@ -22,8 +44,13 @@
     {{ errorMsg }}
   </div>
 
+  <!-- No Search Results State -->
+  <div *ngIf="!loading && !errorMsg && filteredCustomers.length === 0 && searchQuery" class="no-results-message">
+    No customers found matching your search.
+  </div>
+
   <!-- Customer table -->
-  <table *ngIf="!loading && customers.length > 0">
+  <table *ngIf="!loading && filteredCustomers.length > 0">
     <thead>
       <tr>
         <th>S.No</th>
@@ -51,15 +78,15 @@
   </table>
 
   <!-- Empty state -->
-  <div *ngIf="!loading && customers.length === 0" class="empty-state">
+  <div *ngIf="!loading && filteredCustomers.length === 0 && !searchQuery" class="empty-state">
     <p>No customers found.</p>
   </div>
 
   <!-- Pagination -->
-  <div class="pagination" *ngIf="customers.length > 0">
+  <div class="pagination" *ngIf="filteredCustomers.length > 0">
     <button (click)="prev()" [disabled]="page === 1">Prev</button>
     <span>Page {{ page }}</span>
-    <button (click)="next()" [disabled]="page * perPage >= customers.length">
+    <button (click)="next()" [disabled]="page * perPage >= filteredCustomers.length">
       Next
     </button>
   </div>
@@ -81,5 +108,16 @@
     <button class="btn update" (click)="closeSuccess()">OK</button>
   </div>
 </div>
+
+<!-- Logout Confirmation Dialog -->
+<app-confirmation-dialog
+  [isVisible]="showLogoutConfirm"
+  title="Confirm Logout"
+  message="Are you sure you want to logout? You will be redirected to the home page."
+  confirmText="Yes, Logout"
+  cancelText="Cancel"
+  (confirm)="confirmLogout()"
+  (cancel)="cancelLogout()">
+</app-confirmation-dialog>
 
 

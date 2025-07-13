@@ -1,11 +1,13 @@
 
 
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { GetProductService } from '../../services/get_product_service';
 import { DeleteProductService } from '../../services/delete_product_service';
 import { ProductSearchService } from '../../services/product-search.service';
+import { AuthService } from '../../services/auth.service';
+import { Subscription } from 'rxjs';
 
 interface Product {
   productId: number;
@@ -21,7 +23,7 @@ interface Product {
   templateUrl: './view-product.component.html',
   styleUrls: ['./view-product.component.css']
 })
-export class ViewProductComponent implements OnInit {
+export class ViewProductComponent implements OnInit, OnDestroy {
   allProducts: Product[] = [];
   filteredProducts: Product[] = [];
   page = 1;
@@ -43,16 +45,35 @@ export class ViewProductComponent implements OnInit {
   searchError = '';
   showNoResults = false;
 
+  // For logout confirmation
+  showLogoutConfirm = false;
+  private logoutSubscription?: Subscription;
+
   constructor(
     private router: Router,
     private location: Location,
     private getProductService: GetProductService,
     private deleteProductService: DeleteProductService,
-    private productSearchService: ProductSearchService
+    private productSearchService: ProductSearchService,
+    private authService: AuthService
   ) {}
 
   ngOnInit() {
     this.loadProducts();
+    
+    // Subscribe to logout confirmation requests
+    this.logoutSubscription = this.authService.logoutConfirmation$.subscribe(
+      (showDialog) => {
+        this.showLogoutConfirm = showDialog;
+      }
+    );
+  }
+
+  ngOnDestroy() {
+    // Clean up subscription
+    if (this.logoutSubscription) {
+      this.logoutSubscription.unsubscribe();
+    }
   }
 
   loadProducts() {
@@ -147,15 +168,18 @@ export class ViewProductComponent implements OnInit {
     if (this.page * this.perPage < this.filteredProducts.length) this.page++;
   }
 
-  showLogoutConfirm = false;
+  logout() {
+    this.authService.requestLogout();
+  }
 
   confirmLogout() {
     this.showLogoutConfirm = false;
-    window.location.href = '/';
+    this.authService.confirmLogout();
   }
 
   cancelLogout() {
     this.showLogoutConfirm = false;
+    this.authService.cancelLogout();
   }
 
   goBack() {

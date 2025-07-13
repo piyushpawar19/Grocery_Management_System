@@ -1,36 +1,56 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { GetCartService, CartItem, CartResponse } from '../../services/get-cart.service';
 import { UpdateCartService, CartItemUpdateRequest } from '../../services/update-cart.service';
 import { CartItemService } from '../../services/cart-item.service';
+import { AuthService } from '../../services/auth.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-add-to-cart',
   templateUrl: './add-to-cart.component.html',
   styleUrls: ['./add-to-cart.component.css'],
 })
-export class AddToCartComponent implements OnInit {
+export class AddToCartComponent implements OnInit, OnDestroy {
   items: CartItem[] = [];
   cartTotal: number = 0;
   loading: boolean = false;
   errorMsg: string = '';
+  
+  // For logout confirmation
   showLogoutConfirm: boolean = false;
+  private logoutSubscription?: Subscription;
   
   constructor(
     private router: Router, 
     private location: Location,
     private getCartService: GetCartService,
     private updateCartService: UpdateCartService,
-    private cartItemService: CartItemService
+    private cartItemService: CartItemService,
+    private authService: AuthService
   ) {}
-
-  goBack() {
-    this.location.back();
-  }
 
   ngOnInit() {
     this.loadCartItems();
+    
+    // Subscribe to logout confirmation requests
+    this.logoutSubscription = this.authService.logoutConfirmation$.subscribe(
+      (showDialog) => {
+        this.showLogoutConfirm = showDialog;
+      }
+    );
+  }
+
+  ngOnDestroy() {
+    // Clean up subscription
+    if (this.logoutSubscription) {
+      this.logoutSubscription.unsubscribe();
+    }
+  }
+
+  goBack() {
+    this.location.back();
   }
 
   loadCartItems() {
@@ -137,13 +157,17 @@ export class AddToCartComponent implements OnInit {
     this.router.navigate(['dashboard']);
   }
 
+  logout() {
+    this.authService.requestLogout();
+  }
+
   confirmLogout() {
     this.showLogoutConfirm = false;
-    // Navigate to login/root/home page
-    window.location.href = '/';
+    this.authService.confirmLogout();
   }
 
   cancelLogout() {
     this.showLogoutConfirm = false;
+    this.authService.cancelLogout();
   }
 }

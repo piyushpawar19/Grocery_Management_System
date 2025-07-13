@@ -1,12 +1,9 @@
 <nav class="navbar">
   <button class="btn back" (click)="goBack()">←</button>
   <div class="logo">
-    <a
-      href="home.component.html"
-      style="text-decoration: none; color: #fff; margin-right: -60px"
-    >
-      Grocery<span>Mart</span></a
-    >
+    <a href="home.component.html" style="text-decoration: none; color: #fff">
+      Grocery<span>Mart</span>
+    </a>
   </div>
   <div class="search-container">
     <input type="text" placeholder="Search groceries..." />
@@ -16,7 +13,7 @@
   </div>
   <div class="links">
     <a routerLink="/user-dashboard/profile">Profile</a>
-    <a (click)="showLogoutConfirm = true" style="cursor: pointer">Logout</a>
+    <a (click)="logout()" style="cursor: pointer">Logout</a>
   </div>
 </nav>
 
@@ -147,5 +144,16 @@
     <button (click)="closeErrorDialog()">OK</button>
   </div>
 </div>
+
+<!-- Logout Confirmation Dialog -->
+<app-confirmation-dialog
+  [isVisible]="showLogoutConfirm"
+  title="Confirm Logout"
+  message="Are you sure you want to logout? You will be redirected to the home page."
+  confirmText="Yes, Logout"
+  cancelText="Cancel"
+  (confirm)="confirmLogout()"
+  (cancel)="cancelLogout()">
+</app-confirmation-dialog>
 
 

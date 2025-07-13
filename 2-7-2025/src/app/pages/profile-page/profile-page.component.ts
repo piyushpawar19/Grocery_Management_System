@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -10,6 +10,8 @@ import { ProfileService, UserDto, UpdateProfileRequest } from '../../services/up
 import { Router } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 import { RoleService } from '../../services/role.service';
+import { AuthService } from '../../services/auth.service';
+import { Subscription } from 'rxjs';
 
 // Custom email regex validator (same as registration)
 const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -24,12 +26,11 @@ function customEmailValidator(control: AbstractControl): ValidationErrors | null
   templateUrl: './profile-page.component.html',
   styleUrls: ['./profile-page.component.css']
 })
-export class ProfileComponent implements OnInit {
+export class ProfileComponent implements OnInit, OnDestroy {
   profileForm!: FormGroup;
   isEditMode = false;
   showUpdateDialog = false;
   showErrorDialog = false;
-  showLogoutConfirm = false;
   submitted = false;
   loading = false;
   errorMsg = '';
@@ -40,11 +41,16 @@ export class ProfileComponent implements OnInit {
   // Password validation pattern (same as registration)
   private passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/;
 
+  // For logout confirmation
+  showLogoutConfirm = false;
+  private logoutSubscription?: Subscription;
+
   constructor(
     private fb: FormBuilder,
     private profileService: ProfileService,
     private router: Router,
-    private roleService: RoleService
+    private roleService: RoleService,
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
@@ -69,6 +75,20 @@ export class ProfileComponent implements OnInit {
       ]
     });
     this.fetchProfile();
+    
+    // Subscribe to logout confirmation requests
+    this.logoutSubscription = this.authService.logoutConfirmation$.subscribe(
+      (showDialog) => {
+        this.showLogoutConfirm = showDialog;
+      }
+    );
+  }
+
+  ngOnDestroy() {
+    // Clean up subscription
+    if (this.logoutSubscription) {
+      this.logoutSubscription.unsubscribe();
+    }
   }
 
   // Strict name validator: only alphabets and spaces (same as registration)
@@ -374,15 +394,18 @@ export class ProfileComponent implements OnInit {
     this.errorDialogMessage = '';
   }
 
+  logout() {
+    this.authService.requestLogout();
+  }
+
   confirmLogout() {
-    localStorage.removeItem('username');
-    localStorage.removeItem('password');
-    localStorage.removeItem('customerId');
-    this.router.navigate(['/login-selection']);
+    this.showLogoutConfirm = false;
+    this.authService.confirmLogout();
   }
 
   cancelLogout() {
     this.showLogoutConfirm = false;
+    this.authService.cancelLogout();
   }
 }
 

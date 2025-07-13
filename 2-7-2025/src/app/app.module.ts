@@ -30,6 +30,7 @@ import { ViewCustomerComponent } from './pages/view-customer/view-customer.compo
 import { ProfileComponent } from './pages/profile-page/profile-page.component';
 import { ChangePasswordComponent } from './pages/change-password/change-password.component';
 import { AdminOrderHistoryComponent } from './pages/admin-order-history/admin-order-history.component';
+import { UserOrderHistoryComponent } from './pages/user-order-history/user-order-history.component';
 import { DialogComponent } from './shared/dialog/dialog.component';
 import { SearchBarComponent } from './shared/search-bar/search-bar.component';
 import { ConfirmationDialogComponent } from './components/confirmation-dialog/confirmation-dialog.component';
@@ -58,6 +59,7 @@ import { ConfirmationDialogComponent } from './components/confirmation-dialog/co
     ProfileComponent,
     ChangePasswordComponent,
     AdminOrderHistoryComponent,
+    UserOrderHistoryComponent,
     DialogComponent,
     SearchBarComponent,
     ConfirmationDialogComponent,
